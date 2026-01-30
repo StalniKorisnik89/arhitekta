@@ -63,10 +63,19 @@ async function githubRequest(endpoint, options = {}) {
 
 async function getFileContent(path) {
     try {
-        const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}`);
+        // URL encode the path to handle special characters
+        const encodedPath = encodeURIComponent(path).replace(/%2F/g, '/');
+        const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`);
         
         if (response.content) {
-            const content = atob(response.content.replace(/\s/g, ''));
+            // Handle both base64 encoded content and direct content
+            let content;
+            if (response.encoding === 'base64') {
+                content = atob(response.content.replace(/\s/g, ''));
+            } else {
+                content = response.content;
+            }
+            
             return {
                 content: JSON.parse(content),
                 sha: response.sha
@@ -74,22 +83,35 @@ async function getFileContent(path) {
         }
         return null;
     } catch (error) {
+        // If file doesn't exist (404), return null instead of throwing
+        if (error.message && error.message.includes('404')) {
+            console.log('File does not exist, will be created:', path);
+            return null;
+        }
         console.error('Error getting file:', error);
         throw error;
     }
 }
 
 async function updateFile(path, content, sha, message = 'Update content') {
-    const contentBase64 = btoa(JSON.stringify(content, null, 2));
+    // Ensure content is properly formatted JSON string
+    const contentString = JSON.stringify(content, null, 2);
+    const contentBase64 = btoa(unescape(encodeURIComponent(contentString)));
     
     const body = {
         message: message,
-        content: contentBase64,
-        sha: sha
+        content: contentBase64
     };
+    
+    // Only include sha if file exists (for updates)
+    if (sha) {
+        body.sha = sha;
+    }
 
     try {
-        await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}`, {
+        // URL encode the path
+        const encodedPath = encodeURIComponent(path).replace(/%2F/g, '/');
+        await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
             method: 'PUT',
             body: JSON.stringify(body)
         });
@@ -101,23 +123,8 @@ async function updateFile(path, content, sha, message = 'Update content') {
 }
 
 async function createFile(path, content, message = 'Create file') {
-    const contentBase64 = btoa(JSON.stringify(content, null, 2));
-    
-    const body = {
-        message: message,
-        content: contentBase64
-    };
-
-    try {
-        await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}`, {
-            method: 'PUT',
-            body: JSON.stringify(body)
-        });
-        return true;
-    } catch (error) {
-        console.error('Error creating file:', error);
-        throw error;
-    }
+    // Use updateFile with no sha to create new file
+    return await updateFile(path, content, null, message);
 }
 
 // ===== Data Management =====
@@ -128,21 +135,36 @@ async function loadData() {
     showLoading(true);
     try {
         const result = await getFileContent(DATA_FILE_PATH);
-        if (result) {
+        if (result && result.content) {
             currentData = result.content;
             currentSha = result.sha;
             populateForms();
             showNotification('Podaci uspešno učitani', 'success');
         } else {
-            // Create initial file if it doesn't exist
+            // File doesn't exist, create it
             currentData = getInitialData();
-            await createFile(DATA_FILE_PATH, currentData, 'Initial content file');
-            currentSha = null; // Will be updated on next load
-            populateForms();
-            showNotification('Kreiran novi fajl sa podacima', 'success');
+            try {
+                await createFile(DATA_FILE_PATH, currentData, 'Initial content file');
+                // Reload to get the SHA
+                const newResult = await getFileContent(DATA_FILE_PATH);
+                if (newResult) {
+                    currentSha = newResult.sha;
+                }
+                populateForms();
+                showNotification('Kreiran novi fajl sa podacima', 'success');
+            } catch (createError) {
+                console.error('Error creating file:', createError);
+                // Still populate with initial data so user can work
+                populateForms();
+                showNotification('Kreiran lokalni fajl. Pokušajte ponovo da sačuvate.', 'error');
+            }
         }
     } catch (error) {
+        console.error('Load data error:', error);
         showNotification('Greška pri učitavanju podataka: ' + error.message, 'error');
+        // Try to use initial data as fallback
+        currentData = getInitialData();
+        populateForms();
     } finally {
         showLoading(false);
     }
@@ -152,16 +174,27 @@ async function saveData(commitMessage = 'Update content') {
     showLoading(true);
     try {
         if (currentSha) {
+            // Update existing file
             await updateFile(DATA_FILE_PATH, currentData, currentSha, commitMessage);
         } else {
+            // Create new file
             await createFile(DATA_FILE_PATH, currentData, commitMessage);
         }
         
+        // Wait a bit for GitHub to process
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
         // Reload to get new SHA
-        await loadData();
+        const result = await getFileContent(DATA_FILE_PATH);
+        if (result) {
+            currentSha = result.sha;
+        }
+        
         showNotification('Podaci uspešno sačuvani', 'success');
     } catch (error) {
-        showNotification('Greška pri čuvanju: ' + error.message, 'error');
+        console.error('Save data error:', error);
+        const errorMsg = error.message || 'Nepoznata greška';
+        showNotification('Greška pri čuvanju: ' + errorMsg, 'error');
     } finally {
         showLoading(false);
     }
