@@ -37,7 +37,7 @@ function showError(message) {
 async function githubRequest(endpoint, options = {}) {
     const url = `${GITHUB_API_BASE}${endpoint}`;
     const headers = {
-        'Authorization': `Bearer ${githubConfig.token}`,
+        'Authorization': `token ${githubConfig.token}`,
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
         ...options.headers
