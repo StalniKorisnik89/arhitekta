@@ -144,14 +144,19 @@ async function updateFile(path, content, sha, message = 'Update content') {
         console.log('Updating file:', {
             path: encodedPath,
             hasSha: !!sha,
+            sha: sha ? sha.substring(0, 7) + '...' : 'none',
             owner: githubConfig.owner,
-            repo: githubConfig.repo
+            repo: githubConfig.repo,
+            branch: DEFAULT_BRANCH
         });
         
-        await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
+        const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
             method: 'PUT',
             body: JSON.stringify(body)
         });
+        
+        console.log('File update response:', response);
+        return response;
         return true;
     } catch (error) {
         console.error('Error updating file:', error);
