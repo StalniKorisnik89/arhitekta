@@ -511,7 +511,12 @@ document.addEventListener('DOMContentLoaded', () => {
             githubConfig = JSON.parse(savedConfig);
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('admin-dashboard').style.display = 'block';
-            document.getElementById('repo-info').textContent = `${githubConfig.owner}/${githubConfig.repo}`;
+            
+            // Detect default branch
+            detectDefaultBranch().then(() => {
+                document.getElementById('repo-info').textContent = `${githubConfig.owner}/${githubConfig.repo} (${DEFAULT_BRANCH})`;
+            });
+            
             loadData();
         } catch (error) {
             console.error('Error loading saved config:', error);
