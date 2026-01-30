@@ -1,0 +1,541 @@
+// ===== GitHub API Configuration =====
+let githubConfig = {
+    token: null,
+    owner: null,
+    repo: null
+};
+
+const GITHUB_API_BASE = 'https://api.github.com';
+const DATA_FILE_PATH = 'data/content.json';
+
+// ===== Utility Functions =====
+function showLoading(show = true) {
+    document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none';
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification notification-${type}`;
+    notification.style.display = 'block';
+    
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+function showError(message) {
+    const errorDiv = document.getElementById('login-error');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+    setTimeout(() => {
+        errorDiv.style.display = 'none';
+    }, 5000);
+}
+
+// ===== GitHub API Functions =====
+async function githubRequest(endpoint, options = {}) {
+    const url = `${GITHUB_API_BASE}${endpoint}`;
+    const headers = {
+        'Authorization': `token ${githubConfig.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || `HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('GitHub API Error:', error);
+        throw error;
+    }
+}
+
+async function getFileContent(path) {
+    try {
+        const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}`);
+        
+        if (response.content) {
+            const content = atob(response.content.replace(/\s/g, ''));
+            return {
+                content: JSON.parse(content),
+                sha: response.sha
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Error getting file:', error);
+        throw error;
+    }
+}
+
+async function updateFile(path, content, sha, message = 'Update content') {
+    const contentBase64 = btoa(JSON.stringify(content, null, 2));
+    
+    const body = {
+        message: message,
+        content: contentBase64,
+        sha: sha
+    };
+
+    try {
+        await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}`, {
+            method: 'PUT',
+            body: JSON.stringify(body)
+        });
+        return true;
+    } catch (error) {
+        console.error('Error updating file:', error);
+        throw error;
+    }
+}
+
+async function createFile(path, content, message = 'Create file') {
+    const contentBase64 = btoa(JSON.stringify(content, null, 2));
+    
+    const body = {
+        message: message,
+        content: contentBase64
+    };
+
+    try {
+        await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${path}`, {
+            method: 'PUT',
+            body: JSON.stringify(body)
+        });
+        return true;
+    } catch (error) {
+        console.error('Error creating file:', error);
+        throw error;
+    }
+}
+
+// ===== Data Management =====
+let currentData = null;
+let currentSha = null;
+
+async function loadData() {
+    showLoading(true);
+    try {
+        const result = await getFileContent(DATA_FILE_PATH);
+        if (result) {
+            currentData = result.content;
+            currentSha = result.sha;
+            populateForms();
+            showNotification('Podaci uspešno učitani', 'success');
+        } else {
+            // Create initial file if it doesn't exist
+            currentData = getInitialData();
+            await createFile(DATA_FILE_PATH, currentData, 'Initial content file');
+            currentSha = null; // Will be updated on next load
+            populateForms();
+            showNotification('Kreiran novi fajl sa podacima', 'success');
+        }
+    } catch (error) {
+        showNotification('Greška pri učitavanju podataka: ' + error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function saveData(commitMessage = 'Update content') {
+    showLoading(true);
+    try {
+        if (currentSha) {
+            await updateFile(DATA_FILE_PATH, currentData, currentSha, commitMessage);
+        } else {
+            await createFile(DATA_FILE_PATH, currentData, commitMessage);
+        }
+        
+        // Reload to get new SHA
+        await loadData();
+        showNotification('Podaci uspešno sačuvani', 'success');
+    } catch (error) {
+        showNotification('Greška pri čuvanju: ' + error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+function getInitialData() {
+    return {
+        about: {
+            title: "O nama",
+            subtitle: "Studio za arhitekturu i dizajn enterijera",
+            description: "",
+            stats: {
+                experience: "15+",
+                projects: "200+",
+                clients: "100%"
+            }
+        },
+        services: [],
+        portfolio: [],
+        contact: {
+            phone: "",
+            email: "",
+            address: ""
+        }
+    };
+}
+
+// ===== Form Population =====
+function populateForms() {
+    if (!currentData) return;
+
+    // About form
+    if (currentData.about) {
+        document.getElementById('about-title').value = currentData.about.title || '';
+        document.getElementById('about-subtitle').value = currentData.about.subtitle || '';
+        document.getElementById('about-description').value = currentData.about.description || '';
+        document.getElementById('about-experience').value = currentData.about.stats?.experience || '';
+        document.getElementById('about-projects').value = currentData.about.stats?.projects || '';
+        document.getElementById('about-clients').value = currentData.about.stats?.clients || '';
+    }
+
+    // Contact form
+    if (currentData.contact) {
+        document.getElementById('contact-phone').value = currentData.contact.phone || '';
+        document.getElementById('contact-email').value = currentData.contact.email || '';
+        document.getElementById('contact-address').value = currentData.contact.address || '';
+    }
+
+    // Services list
+    renderServices();
+    
+    // Portfolio list
+    renderPortfolio();
+}
+
+// ===== Services Management =====
+function renderServices() {
+    const container = document.getElementById('services-list');
+    container.innerHTML = '';
+
+    if (!currentData.services || currentData.services.length === 0) {
+        container.innerHTML = '<p class="empty-state">Nema usluga. Dodajte prvu uslugu.</p>';
+        return;
+    }
+
+    currentData.services.forEach((service, index) => {
+        const item = document.createElement('div');
+        item.className = 'item-card';
+        item.innerHTML = `
+            <div class="item-card__content">
+                <h3>${service.title}</h3>
+                <p>${service.description}</p>
+            </div>
+            <div class="item-card__actions">
+                <button class="btn btn-small btn-secondary" onclick="editService(${service.id})">Izmeni</button>
+                <button class="btn btn-small btn-danger" onclick="deleteService(${service.id})">Obriši</button>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function editService(id) {
+    const service = currentData.services.find(s => s.id === id);
+    if (!service) return;
+
+    document.getElementById('service-id').value = service.id;
+    document.getElementById('service-title').value = service.title;
+    document.getElementById('service-description').value = service.description;
+    document.getElementById('service-modal-title').textContent = 'Izmeni uslugu';
+    
+    openModal('service-modal');
+}
+
+function deleteService(id) {
+    if (!confirm('Da li ste sigurni da želite da obrišete ovu uslugu?')) return;
+
+    currentData.services = currentData.services.filter(s => s.id !== id);
+    saveData('Delete service');
+}
+
+function addService() {
+    document.getElementById('service-form').reset();
+    document.getElementById('service-id').value = '';
+    document.getElementById('service-modal-title').textContent = 'Dodaj uslugu';
+    openModal('service-modal');
+}
+
+// ===== Portfolio Management =====
+function renderPortfolio() {
+    const container = document.getElementById('portfolio-list');
+    container.innerHTML = '';
+
+    if (!currentData.portfolio || currentData.portfolio.length === 0) {
+        container.innerHTML = '<p class="empty-state">Nema projekata. Dodajte prvi projekat.</p>';
+        return;
+    }
+
+    currentData.portfolio.forEach((project) => {
+        const item = document.createElement('div');
+        item.className = 'item-card';
+        item.innerHTML = `
+            <div class="item-card__image">
+                <img src="${project.image}" alt="${project.title}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+            </div>
+            <div class="item-card__content">
+                <h3>${project.title}</h3>
+                <p class="item-category">${project.category}</p>
+                <p>${project.description}</p>
+            </div>
+            <div class="item-card__actions">
+                <button class="btn btn-small btn-secondary" onclick="editPortfolio(${project.id})">Izmeni</button>
+                <button class="btn btn-small btn-danger" onclick="deletePortfolio(${project.id})">Obriši</button>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function editPortfolio(id) {
+    const project = currentData.portfolio.find(p => p.id === id);
+    if (!project) return;
+
+    document.getElementById('portfolio-id').value = project.id;
+    document.getElementById('portfolio-title').value = project.title;
+    document.getElementById('portfolio-category').value = project.category;
+    document.getElementById('portfolio-image').value = project.image;
+    document.getElementById('portfolio-description').value = project.description;
+    document.getElementById('portfolio-area').value = project.specs?.area || '';
+    document.getElementById('portfolio-year').value = project.specs?.year || '';
+    document.getElementById('portfolio-location').value = project.specs?.location || '';
+    document.getElementById('portfolio-status').value = project.specs?.status || '';
+    document.getElementById('portfolio-modal-title').textContent = 'Izmeni projekat';
+    
+    openModal('portfolio-modal');
+}
+
+function deletePortfolio(id) {
+    if (!confirm('Da li ste sigurni da želite da obrišete ovaj projekat?')) return;
+
+    currentData.portfolio = currentData.portfolio.filter(p => p.id !== id);
+    saveData('Delete portfolio item');
+}
+
+function addPortfolio() {
+    document.getElementById('portfolio-form').reset();
+    document.getElementById('portfolio-id').value = '';
+    document.getElementById('portfolio-modal-title').textContent = 'Dodaj projekat';
+    openModal('portfolio-modal');
+}
+
+// ===== Modal Functions =====
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'none';
+}
+
+// ===== Event Listeners =====
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if already logged in
+    const savedConfig = localStorage.getItem('githubConfig');
+    if (savedConfig) {
+        try {
+            githubConfig = JSON.parse(savedConfig);
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'block';
+            document.getElementById('repo-info').textContent = `${githubConfig.owner}/${githubConfig.repo}`;
+            loadData();
+        } catch (error) {
+            console.error('Error loading saved config:', error);
+            localStorage.removeItem('githubConfig');
+        }
+    }
+
+    // Login form
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        githubConfig = {
+            token: formData.get('token'),
+            owner: formData.get('owner'),
+            repo: formData.get('repo')
+        };
+
+        // Test connection
+        showLoading(true);
+        try {
+            await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
+            
+            // Save config
+            localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
+            
+            // Show dashboard
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'block';
+            document.getElementById('repo-info').textContent = `${githubConfig.owner}/${githubConfig.repo}`;
+            
+            loadData();
+        } catch (error) {
+            showError('Greška pri povezivanju: ' + error.message);
+        } finally {
+            showLoading(false);
+        }
+    });
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        localStorage.removeItem('githubConfig');
+        location.reload();
+    });
+
+    // Tab navigation
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.dataset.tab;
+            
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Show correct content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        });
+    });
+
+    // About form
+    document.getElementById('about-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        currentData.about = {
+            title: formData.get('title'),
+            subtitle: formData.get('subtitle'),
+            description: formData.get('description'),
+            stats: {
+                experience: formData.get('experience'),
+                projects: formData.get('projects'),
+                clients: formData.get('clients')
+            }
+        };
+        
+        await saveData('Update about section');
+    });
+
+    // Contact form
+    document.getElementById('contact-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        currentData.contact = {
+            phone: formData.get('phone'),
+            email: formData.get('email'),
+            address: formData.get('address')
+        };
+        
+        await saveData('Update contact information');
+    });
+
+    // Service form
+    document.getElementById('service-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const id = formData.get('id');
+        
+        const service = {
+            id: id ? parseInt(id) : (currentData.services.length > 0 ? Math.max(...currentData.services.map(s => s.id)) + 1 : 1),
+            title: formData.get('title'),
+            description: formData.get('description')
+        };
+        
+        if (id) {
+            const index = currentData.services.findIndex(s => s.id === parseInt(id));
+            if (index !== -1) {
+                currentData.services[index] = service;
+            }
+        } else {
+            currentData.services.push(service);
+        }
+        
+        closeModal('service-modal');
+        await saveData(id ? 'Update service' : 'Add service');
+    });
+
+    // Portfolio form
+    document.getElementById('portfolio-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const id = formData.get('id');
+        
+        const project = {
+            id: id ? parseInt(id) : (currentData.portfolio.length > 0 ? Math.max(...currentData.portfolio.map(p => p.id)) + 1 : 1),
+            title: formData.get('title'),
+            category: formData.get('category'),
+            image: formData.get('image'),
+            description: formData.get('description'),
+            specs: {
+                area: formData.get('area'),
+                year: formData.get('year'),
+                location: formData.get('location'),
+                status: formData.get('status')
+            },
+            gallery: []
+        };
+        
+        if (id) {
+            const index = currentData.portfolio.findIndex(p => p.id === parseInt(id));
+            if (index !== -1) {
+                // Preserve existing gallery
+                project.gallery = currentData.portfolio[index].gallery || [];
+                currentData.portfolio[index] = project;
+            }
+        } else {
+            currentData.portfolio.push(project);
+        }
+        
+        closeModal('portfolio-modal');
+        await saveData(id ? 'Update portfolio item' : 'Add portfolio item');
+    });
+
+    // Add buttons
+    document.getElementById('add-service-btn').addEventListener('click', addService);
+    document.getElementById('add-portfolio-btn').addEventListener('click', addPortfolio);
+
+    // Modal close buttons
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const modal = e.target.closest('.modal');
+            if (modal) {
+                closeModal(modal.id);
+            }
+        });
+    });
+
+    // Close modal on outside click
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal(modal.id);
+            }
+        });
+    });
+});
+
+// Make functions globally available
+window.editService = editService;
+window.deleteService = deleteService;
+window.editPortfolio = editPortfolio;
+window.deletePortfolio = deletePortfolio;

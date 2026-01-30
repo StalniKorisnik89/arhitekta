@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Arhitektonski Studio</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <h1>Admin Panel</h1>
+            <p class="login-subtitle">Prijavite se sa GitHub Personal Access Token</p>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="github-token">GitHub Personal Access Token</label>
+                    <input 
+                        type="password" 
+                        id="github-token" 
+                        name="token" 
+                        placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                        required
+                    >
+                    <small>
+                        <a href="https://github.com/settings/tokens" target="_blank">Kreirajte token ovde</a> 
+                        (potrebne dozvole: repo)
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="repo-owner">Repo Owner (username)</label>
+                    <input 
+                        type="text" 
+                        id="repo-owner" 
+                        name="owner" 
+                        placeholder="username"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="repo-name">Repo Name</label>
+                    <input 
+                        type="text" 
+                        id="repo-name" 
+                        name="repo" 
+                        placeholder="arhitekta"
+                        required
+                    >
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Prijavi se</button>
+            </form>
+            
+            <div id="login-error" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="admin-dashboard" style="display: none;">
+        <header class="admin-header">
+            <div class="admin-header__content">
+                <h1>Admin Panel</h1>
+                <div class="admin-header__actions">
+                    <span id="repo-info" class="repo-info"></span>
+                    <button id="logout-btn" class="btn btn-secondary">Odjavi se</button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="admin-nav">
+            <button class="nav-tab active" data-tab="about">O nama</button>
+            <button class="nav-tab" data-tab="services">Usluge</button>
+            <button class="nav-tab" data-tab="portfolio">Portfolio</button>
+            <button class="nav-tab" data-tab="contact">Kontakt</button>
+        </nav>
+
+        <main class="admin-content">
+            <!-- About Tab -->
+            <div id="tab-about" class="tab-content active">
+                <h2>O nama - Sadržaj</h2>
+                <form id="about-form" class="admin-form">
+                    <div class="form-group">
+                        <label for="about-title">Naslov</label>
+                        <input type="text" id="about-title" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="about-subtitle">Podnaslov</label>
+                        <input type="text" id="about-subtitle" name="subtitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="about-description">Opis</label>
+                        <textarea id="about-description" name="description" rows="6" required></textarea>
+                    </div>
+                    
+                    <h3>Statistike</h3>
+                    <div class="stats-grid">
+                        <div class="form-group">
+                            <label for="about-experience">Godine iskustva</label>
+                            <input type="text" id="about-experience" name="experience" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="about-projects">Projekti</label>
+                            <input type="text" id="about-projects" name="projects" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="about-clients">Klijenti</label>
+                            <input type="text" id="about-clients" name="clients" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Sačuvaj izmene</button>
+                </form>
+            </div>
+
+            <!-- Services Tab -->
+            <div id="tab-services" class="tab-content">
+                <div class="tab-header">
+                    <h2>Usluge</h2>
+                    <button id="add-service-btn" class="btn btn-primary">+ Dodaj uslugu</button>
+                </div>
+                
+                <div id="services-list" class="items-list">
+                    <!-- Services will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Portfolio Tab -->
+            <div id="tab-portfolio" class="tab-content">
+                <div class="tab-header">
+                    <h2>Portfolio Projekti</h2>
+                    <button id="add-portfolio-btn" class="btn btn-primary">+ Dodaj projekat</button>
+                </div>
+                
+                <div id="portfolio-list" class="items-list">
+                    <!-- Portfolio items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Contact Tab -->
+            <div id="tab-contact" class="tab-content">
+                <h2>Kontakt Informacije</h2>
+                <form id="contact-form" class="admin-form">
+                    <div class="form-group">
+                        <label for="contact-phone">Telefon</label>
+                        <input type="text" id="contact-phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-email">Email</label>
+                        <input type="email" id="contact-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-address">Adresa</label>
+                        <input type="text" id="contact-address" name="address" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Sačuvaj izmene</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Service Modal -->
+    <div id="service-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="service-modal-title">Dodaj uslugu</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="service-form" class="admin-form">
+                <input type="hidden" id="service-id" name="id">
+                <div class="form-group">
+                    <label for="service-title">Naziv usluge</label>
+                    <input type="text" id="service-title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="service-description">Opis</label>
+                    <textarea id="service-description" name="description" rows="4" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary modal-close">Otkaži</button>
+                    <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Portfolio Modal -->
+    <div id="portfolio-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="portfolio-modal-title">Dodaj projekat</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="portfolio-form" class="admin-form">
+                <input type="hidden" id="portfolio-id" name="id">
+                <div class="form-group">
+                    <label for="portfolio-title">Naziv projekta</label>
+                    <input type="text" id="portfolio-title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-category">Kategorija</label>
+                    <input type="text" id="portfolio-category" name="category" required>
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-image">URL slike</label>
+                    <input type="url" id="portfolio-image" name="image" required>
+                    <small>Ili upload slike preko GitHub</small>
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-description">Opis</label>
+                    <textarea id="portfolio-description" name="description" rows="4" required></textarea>
+                </div>
+                <h4>Specifikacije</h4>
+                <div class="specs-grid">
+                    <div class="form-group">
+                        <label for="portfolio-area">Površina</label>
+                        <input type="text" id="portfolio-area" name="area" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-year">Godina</label>
+                        <input type="text" id="portfolio-year" name="year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-location">Lokacija</label>
+                        <input type="text" id="portfolio-location" name="location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-status">Status</label>
+                        <input type="text" id="portfolio-status" name="status" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary modal-close">Otkaži</button>
+                    <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Učitavanje...</p>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification" style="display: none;"></div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (if you add any in future)
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Build files (if you add any build process)
+dist/
+build/
+
+# Local config (don't commit tokens)
+config.local.js

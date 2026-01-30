@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Studio za arhitekturu i dizajn enterijera - kreiramo funkcionalne i estetski izuzetne prostore">
+    <meta name="keywords" content="arhitektura, dizajn enterijera, 3D vizualizacije, arhitektonsko projektovanje">
+    <meta name="author" content="Arhitektonski Studio">
+    <meta property="og:title" content="Arhitektonski Studio - Arhitektura i Dizajn Enterijera">
+    <meta property="og:description" content="Kreiramo funkcionalne i estetski izuzetne prostore koji odražavaju vašu viziju">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.studio.rs">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://www.studio.rs">
+    <title>Arhitektonski Studio | Arhitektura i Dizajn Enterijera</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <div class="nav__logo">
+                <a href="#home" class="logo-link" data-i18n="nav.home">Studio</a>
+            </div>
+            
+            <ul class="nav__menu" id="nav-menu">
+                <li class="nav__item">
+                    <a href="#home" class="nav__link" data-i18n="nav.home">Početna</a>
+                </li>
+                <li class="nav__item">
+                    <a href="about.html" class="nav__link" data-i18n="nav.about">O nama</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#services" class="nav__link" data-i18n="nav.services">Usluge</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#portfolio" class="nav__link" data-i18n="nav.portfolio">Portfolio</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#contact" class="nav__link" data-i18n="nav.contact">Kontakt</a>
+                </li>
+            </ul>
+            
+            <div class="nav__actions">
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="sr">SR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ru">RU</button>
+                </div>
+                <div class="nav__toggle" id="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero__container container">
+            <div class="hero__content">
+                <h1 class="hero__title" data-i18n="hero.headline">Arhitektura koja oživljava prostor</h1>
+                <p class="hero__subtitle" data-i18n="hero.subtitle">Kreiramo funkcionalne i estetski izuzetne prostore koji odražavaju vašu viziju i potrebe</p>
+                <div class="hero__cta">
+                    <a href="#contact" class="btn btn--primary" data-i18n="hero.ctaContact">Kontaktirajte nas</a>
+                    <a href="#portfolio" class="btn btn--secondary" data-i18n="hero.ctaPortfolio">Portfolio</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero__overlay"></div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about section" id="about">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title" data-i18n="about.title">O nama</h2>
+                <p class="section__subtitle" data-i18n="about.subtitle">Studio za arhitekturu i dizajn enterijera</p>
+            </div>
+            
+            <div class="about__content">
+                <div class="about__text">
+                    <p class="about__description" data-i18n="about.description">Sa više od 15 godina iskustva u arhitektonskom projektovanju i dizajnu enterijera, naš studio kombinuje funkcionalnost, estetiku i inovativne materijale kako bismo kreirali prostore koji nadmašuju očekivanja. Svaki projekat je jedinstvena priča koja nastaje kroz pažljivo slušanje klijentovih potreba i transformaciju ideja u konkretne, živuće prostore.</p>
+                </div>
+                
+                <div class="about__stats">
+                    <div class="stat-card">
+                        <div class="stat-card__number">15+</div>
+                        <div class="stat-card__label" data-i18n="about.experience">godina iskustva</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__number">200+</div>
+                        <div class="stat-card__label" data-i18n="about.projects">realizovanih projekata</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__number">100%</div>
+                        <div class="stat-card__label" data-i18n="about.clients">zadovoljni klijenti</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services section" id="services">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title" data-i18n="services.title">Usluge</h2>
+                <p class="section__subtitle" data-i18n="services.subtitle">Kompletan spektar arhitektonskih i dizajnerskih rešenja</p>
+            </div>
+            
+            <div class="services__grid">
+                <div class="service-card">
+                    <div class="service-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="service-card__title" data-i18n="services.architectural.title">Arhitektonsko projektovanje</h3>
+                    <p class="service-card__description" data-i18n="services.architectural.description">Kompletan arhitektonski projekat od konceptualne faze do izvedbe, uključujući tehničku dokumentaciju i nadzor radova.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                        </svg>
+                    </div>
+                    <h3 class="service-card__title" data-i18n="services.interior.title">Dizajn enterijera</h3>
+                    <p class="service-card__description" data-i18n="services.interior.description">Kreiranje funkcionalnih i estetski savršenih enterijera koji odražavaju vaš stil života i potrebe.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <h3 class="service-card__title" data-i18n="services.visualization.title">3D vizualizacije</h3>
+                    <p class="service-card__description" data-i18n="services.visualization.description">Fotorealistične 3D vizualizacije koje vam omogućavaju da vidite projekat pre realizacije.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="service-card__title" data-i18n="services.consultation.title">Konsultacije</h3>
+                    <p class="service-card__description" data-i18n="services.consultation.description">Stručne konsultacije za optimizaciju prostora, izbor materijala i arhitektonska rešenja.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="portfolio section" id="portfolio">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title" data-i18n="portfolio.title">Portfolio</h2>
+                <p class="section__subtitle" data-i18n="portfolio.subtitle">Naši najnoviji projekti</p>
+            </div>
+            
+            <div class="portfolio__grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-item__image">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Moderna vila" loading="lazy">
+                    </div>
+                    <div class="portfolio-item__overlay">
+                        <div class="portfolio-item__content">
+                            <h3 class="portfolio-item__title" data-i18n="portfolio.project1.title">Moderna vila</h3>
+                            <p class="portfolio-item__category" data-i18n="portfolio.project1.category">Rezidencijalna arhitektura</p>
+                            <a href="portfolio-detail.html?id=1" class="portfolio-item__link" data-i18n="portfolio.viewProject">Pogledaj projekat</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-item__image">
+                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Luksuzni enterijer" loading="lazy">
+                    </div>
+                    <div class="portfolio-item__overlay">
+                        <div class="portfolio-item__content">
+                            <h3 class="portfolio-item__title" data-i18n="portfolio.project2.title">Luksuzni enterijer</h3>
+                            <p class="portfolio-item__category" data-i18n="portfolio.project2.category">Dizajn enterijera</p>
+                            <a href="portfolio-detail.html?id=2" class="portfolio-item__link" data-i18n="portfolio.viewProject">Pogledaj projekat</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-item__image">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Poslovni prostor" loading="lazy">
+                    </div>
+                    <div class="portfolio-item__overlay">
+                        <div class="portfolio-item__content">
+                            <h3 class="portfolio-item__title" data-i18n="portfolio.project3.title">Poslovni prostor</h3>
+                            <p class="portfolio-item__category" data-i18n="portfolio.project3.category">Komercijalna arhitektura</p>
+                            <a href="portfolio-detail.html?id=3" class="portfolio-item__link" data-i18n="portfolio.viewProject">Pogledaj projekat</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-item__image">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Minimalistički stan" loading="lazy">
+                    </div>
+                    <div class="portfolio-item__overlay">
+                        <div class="portfolio-item__content">
+                            <h3 class="portfolio-item__title" data-i18n="portfolio.project4.title">Minimalistički stan</h3>
+                            <p class="portfolio-item__category" data-i18n="portfolio.project4.category">Dizajn enterijera</p>
+                            <a href="portfolio-detail.html?id=4" class="portfolio-item__link" data-i18n="portfolio.viewProject">Pogledaj projekat</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-item__image">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Restoran" loading="lazy">
+                    </div>
+                    <div class="portfolio-item__overlay">
+                        <div class="portfolio-item__content">
+                            <h3 class="portfolio-item__title" data-i18n="portfolio.project5.title">Restoran</h3>
+                            <p class="portfolio-item__category" data-i18n="portfolio.project5.category">Horeka dizajn</p>
+                            <a href="portfolio-detail.html?id=5" class="portfolio-item__link" data-i18n="portfolio.viewProject">Pogledaj projekat</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item">
+                    <div class="portfolio-item__image">
+                        <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Loft prostor" loading="lazy">
+                    </div>
+                    <div class="portfolio-item__overlay">
+                        <div class="portfolio-item__content">
+                            <h3 class="portfolio-item__title" data-i18n="portfolio.project6.title">Loft prostor</h3>
+                            <p class="portfolio-item__category" data-i18n="portfolio.project6.category">Adaptacija</p>
+                            <a href="portfolio-detail.html?id=6" class="portfolio-item__link" data-i18n="portfolio.viewProject">Pogledaj projekat</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact section" id="contact">
+        <div class="container">
+            <div class="section__header">
+                <h2 class="section__title" data-i18n="contact.title">Kontakt</h2>
+                <p class="section__subtitle" data-i18n="contact.subtitle">Javite nam se</p>
+            </div>
+            
+            <div class="contact__content">
+                <div class="contact__form-wrapper">
+                    <form class="contact__form" id="contact-form">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" class="form-input" required data-i18n-placeholder="contact.form.name">
+                            <label for="name" class="form-label" data-i18n="contact.form.name">Ime</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" class="form-input" required data-i18n-placeholder="contact.form.email">
+                            <label for="email" class="form-label" data-i18n="contact.form.email">Email</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" name="phone" class="form-input" data-i18n-placeholder="contact.form.phone">
+                            <label for="phone" class="form-label" data-i18n="contact.form.phone">Telefon</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" class="form-input form-textarea" rows="5" required data-i18n-placeholder="contact.form.message"></textarea>
+                            <label for="message" class="form-label" data-i18n="contact.form.message">Poruka</label>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full" data-i18n="contact.form.send">Pošalji</button>
+                    </form>
+                </div>
+                
+                <div class="contact__info">
+                    <div class="contact-info-item">
+                        <div class="contact-info-item__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </div>
+                        <div class="contact-info-item__content">
+                            <h4 data-i18n="contact.info.phone">Telefon</h4>
+                            <p>+381 11 123 4567</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <div class="contact-info-item__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="contact-info-item__content">
+                            <h4 data-i18n="contact.info.email">Email</h4>
+                            <p>info@studio.rs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <div class="contact-info-item__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                        <div class="contact-info-item__content">
+                            <h4 data-i18n="contact.info.location">Lokacija</h4>
+                            <p data-i18n="contact.info.address">Beograd, Srbija</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__section">
+                    <h3 class="footer__title" data-i18n="footer.quickLinks">Brzi linkovi</h3>
+                    <ul class="footer__links">
+                        <li><a href="#home" data-i18n="nav.home">Početna</a></li>
+                        <li><a href="about.html" data-i18n="nav.about">O nama</a></li>
+                        <li><a href="#services" data-i18n="nav.services">Usluge</a></li>
+                        <li><a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a></li>
+                        <li><a href="#contact" data-i18n="nav.contact">Kontakt</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer__section">
+                    <h3 class="footer__title" data-i18n="footer.contactInfo">Kontakt informacije</h3>
+                    <ul class="footer__info">
+                        <li>+381 11 123 4567</li>
+                        <li>info@studio.rs</li>
+                        <li data-i18n="contact.info.address">Beograd, Srbija</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer__bottom">
+                <p>&copy; 2024 Arhitektonski Studio. <span data-i18n="footer.rights">Sva prava zadržana</span>.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

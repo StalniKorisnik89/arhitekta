@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detalji projekta - Arhitektonski Studio">
+    <title>Detalji Projekta | Arhitektonski Studio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .project-detail {
+            padding-top: 100px;
+            min-height: 100vh;
+            background-color: var(--color-bg-primary);
+        }
+        
+        .project-hero {
+            position: relative;
+            height: 60vh;
+            min-height: 500px;
+            margin-bottom: var(--spacing-xl);
+            overflow: hidden;
+        }
+        
+        .project-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .project-hero__overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--spacing-lg);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+        }
+        
+        .project-hero__title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--color-white);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .project-hero__category {
+            color: var(--color-wood);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .project-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-sm);
+        }
+        
+        .project-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        @media (min-width: 768px) {
+            .project-info {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        .project-description {
+            color: var(--color-text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.9;
+        }
+        
+        .project-specs {
+            background-color: var(--color-bg-secondary);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-specs h3 {
+            font-family: var(--font-display);
+            color: var(--color-white);
+            margin-bottom: var(--spacing-md);
+            font-size: 1.5rem;
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            color: var(--color-text-secondary);
+        }
+        
+        .spec-value {
+            color: var(--color-white);
+            font-weight: 500;
+        }
+        
+        .project-gallery {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        @media (min-width: 768px) {
+            .project-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .gallery-item {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-slow);
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            color: var(--color-wood);
+            margin-bottom: var(--spacing-lg);
+            font-weight: 500;
+            transition: var(--transition-base);
+        }
+        
+        .back-link:hover {
+            color: var(--color-white);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <div class="nav__logo">
+                <a href="index.html" class="logo-link" data-i18n="nav.home">Studio</a>
+            </div>
+            
+            <ul class="nav__menu" id="nav-menu">
+                <li class="nav__item">
+                    <a href="index.html#home" class="nav__link" data-i18n="nav.home">Početna</a>
+                </li>
+                <li class="nav__item">
+                    <a href="index.html#about" class="nav__link" data-i18n="nav.about">O nama</a>
+                </li>
+                <li class="nav__item">
+                    <a href="index.html#services" class="nav__link" data-i18n="nav.services">Usluge</a>
+                </li>
+                <li class="nav__item">
+                    <a href="index.html#portfolio" class="nav__link" data-i18n="nav.portfolio">Portfolio</a>
+                </li>
+                <li class="nav__item">
+                    <a href="index.html#contact" class="nav__link" data-i18n="nav.contact">Kontakt</a>
+                </li>
+            </ul>
+            
+            <div class="nav__actions">
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="sr">SR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ru">RU</button>
+                </div>
+                <div class="nav__toggle" id="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="project-detail">
+        <div class="container">
+            <a href="index.html#portfolio" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Nazad na portfolio
+            </a>
+        </div>
+        
+        <div class="project-hero" id="project-hero">
+            <img id="hero-image" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Project">
+            <div class="project-hero__overlay">
+                <h1 class="project-hero__title" id="project-title">Moderna vila</h1>
+                <p class="project-hero__category" id="project-category">Rezidencijalna arhitektura</p>
+            </div>
+        </div>
+        
+        <div class="project-content">
+            <div class="project-info">
+                <div class="project-description" id="project-description">
+                    <p>Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću. Vila je dizajnirana sa fokusom na prirodno svetlo, otvorene prostore i harmoniju sa okruženjem.</p>
+                    <p>Korišćeni su premium materijali - prirodni kamen, drvo i metal, što daje prostoru luksuzan i trajan karakter. Veliki prozori omogućavaju prirodno osvetljenje tokom dana, dok je večernje osvetljenje pažljivo planirano kako bi stvorilo toplu i ugodnu atmosferu.</p>
+                </div>
+                
+                <div class="project-specs">
+                    <h3>Specifikacije</h3>
+                    <div class="spec-item">
+                        <span class="spec-label">Površina:</span>
+                        <span class="spec-value" id="spec-area">450 m²</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Godina:</span>
+                        <span class="spec-value" id="spec-year">2023</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Lokacija:</span>
+                        <span class="spec-value" id="spec-location">Beograd</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Status:</span>
+                        <span class="spec-value" id="spec-status">Završeno</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-gallery" id="project-gallery">
+                <!-- Gallery items will be populated by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__section">
+                    <h3 class="footer__title" data-i18n="footer.quickLinks">Brzi linkovi</h3>
+                    <ul class="footer__links">
+                        <li><a href="index.html#home" data-i18n="nav.home">Početna</a></li>
+                        <li><a href="index.html#about" data-i18n="nav.about">O nama</a></li>
+                        <li><a href="index.html#services" data-i18n="nav.services">Usluge</a></li>
+                        <li><a href="index.html#portfolio" data-i18n="nav.portfolio">Portfolio</a></li>
+                        <li><a href="index.html#contact" data-i18n="nav.contact">Kontakt</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer__section">
+                    <h3 class="footer__title" data-i18n="footer.contactInfo">Kontakt informacije</h3>
+                    <ul class="footer__info">
+                        <li>+381 11 123 4567</li>
+                        <li>info@studio.rs</li>
+                        <li data-i18n="contact.info.address">Beograd, Srbija</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer__bottom">
+                <p>&copy; 2024 Arhitektonski Studio. <span data-i18n="footer.rights">Sva prava zadržana</span>.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data-loader.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Load project data from content.json
+        async function loadProjectData() {
+            try {
+                const response = await fetch('data/content.json');
+                if (!response.ok) throw new Error('Failed to load content');
+                const content = await response.json();
+                return content.portfolio || [];
+            } catch (error) {
+                console.error('Error loading project data:', error);
+                return [];
+            }
+        }
+        
+        // Project data will be loaded dynamically
+        let projects = {};
+            1: {
+                title: "Moderna vila",
+                category: "Rezidencijalna arhitektura",
+                description: `<p>Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću. Vila je dizajnirana sa fokusom na prirodno svetlo, otvorene prostore i harmoniju sa okruženjem.</p>
+                <p>Korišćeni su premium materijali - prirodni kamen, drvo i metal, što daje prostoru luksuzan i trajan karakter. Veliki prozori omogućavaju prirodno osvetljenje tokom dana, dok je večernje osvetljenje pažljivo planirano kako bi stvorilo toplu i ugodnu atmosferu.</p>`,
+                heroImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                specs: {
+                    area: "450 m²",
+                    year: "2023",
+                    location: "Beograd",
+                    status: "Završeno"
+                }
+            },
+            2: {
+                title: "Luksuzni enterijer",
+                category: "Dizajn enterijera",
+                description: `<p>Luksuzni enterijer dizajniran sa pažnjom na svaki detalj. Kombinacija modernih i klasičnih elemenata stvara prostor koji odiše elegancijom i sofisticiranošću.</p>
+                <p>Korišćeni su ekskluzivni materijali i nameštaj, pažljivo odabrani kako bi stvorili harmoniju između funkcionalnosti i estetike.</p>`,
+                heroImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                specs: {
+                    area: "280 m²",
+                    year: "2023",
+                    location: "Novi Sad",
+                    status: "Završeno"
+                }
+            },
+            3: {
+                title: "Poslovni prostor",
+                category: "Komercijalna arhitektura",
+                description: `<p>Savremeni poslovni prostor dizajniran za produktivnost i komfor. Otvoreni plan omogućava fleksibilnost i saradnju, dok privatne kancelarije pružaju prostor za fokusiran rad.</p>`,
+                heroImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                specs: {
+                    area: "850 m²",
+                    year: "2022",
+                    location: "Beograd",
+                    status: "Završeno"
+                }
+            },
+            4: {
+                title: "Minimalistički stan",
+                category: "Dizajn enterijera",
+                description: `<p>Minimalistički pristup dizajnu koji naglašava čistotu linija i funkcionalnost. Svaki element je pažljivo odabran kako bi doprineo celokupnoj harmoniji prostora.</p>`,
+                heroImage: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                specs: {
+                    area: "95 m²",
+                    year: "2023",
+                    location: "Beograd",
+                    status: "Završeno"
+                }
+            },
+            5: {
+                title: "Restoran",
+                category: "Horeka dizajn",
+                description: `<p>Elegantan restoran sa atmosferom koja kombinuje moderni dizajn sa toplinom tradicionalnih elemenata. Prostor je dizajniran kako bi pružio nezaboravno iskustvo gostima.</p>`,
+                heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                specs: {
+                    area: "320 m²",
+                    year: "2022",
+                    location: "Beograd",
+                    status: "Završeno"
+                }
+            },
+            6: {
+                title: "Loft prostor",
+                category: "Adaptacija",
+                description: `<p>Industrijski prostor transformisan u moderan i funkcionalan stan. Zadržani su originalni elementi poput opeke i betona, kombinovani sa modernim materijalima.</p>`,
+                heroImage: "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                specs: {
+                    area: "180 m²",
+                    year: "2023",
+                    location: "Beograd",
+                    status: "Završeno"
+                }
+            }
+        };
+        
+        // Load and populate project data
+        async function initProjectPage() {
+            const portfolioItems = await loadProjectData();
+            
+            // Convert array to object with id as key
+            portfolioItems.forEach(item => {
+                projects[item.id] = {
+                    title: item.title,
+                    category: item.category,
+                    description: `<p>${item.description}</p>`,
+                    heroImage: item.image,
+                    gallery: item.gallery || [],
+                    specs: item.specs || {}
+                };
+            });
+            
+            // Get project ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = parseInt(urlParams.get('id')) || 1;
+            const project = projects[projectId];
+            
+            if (!project) {
+                document.body.innerHTML = '<h1>Projekat nije pronađen</h1>';
+                return;
+            }
+            
+            // Populate page
+            document.getElementById('hero-image').src = project.heroImage;
+            document.getElementById('hero-image').alt = project.title;
+            document.getElementById('project-title').textContent = project.title;
+            document.getElementById('project-category').textContent = project.category;
+            document.getElementById('project-description').innerHTML = project.description;
+            document.getElementById('spec-area').textContent = project.specs.area || '';
+            document.getElementById('spec-year').textContent = project.specs.year || '';
+            document.getElementById('spec-location').textContent = project.specs.location || '';
+            document.getElementById('spec-status').textContent = project.specs.status || '';
+            
+            // Populate gallery
+            const gallery = document.getElementById('project-gallery');
+            if (project.gallery && project.gallery.length > 0) {
+                project.gallery.forEach(imgSrc => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${imgSrc}" alt="${project.title}" loading="lazy">`;
+                    gallery.appendChild(item);
+                });
+            } else {
+                // If no gallery, show main image
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `<img src="${project.heroImage}" alt="${project.title}" loading="lazy">`;
+                gallery.appendChild(item);
+            }
+            
+            // Update page title
+            document.title = `${project.title} | Arhitektonski Studio`;
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initProjectPage);
+        } else {
+            initProjectPage();
+        }
+    </script>
+</body>
+</html>

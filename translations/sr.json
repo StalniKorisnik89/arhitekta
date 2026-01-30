@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Početna",
+    "about": "O nama",
+    "services": "Usluge",
+    "portfolio": "Portfolio",
+    "contact": "Kontakt"
+  },
+  "hero": {
+    "headline": "Arhitektura koja oživljava prostor",
+    "subtitle": "Kreiramo funkcionalne i estetski izuzetne prostore koji odražavaju vašu viziju i potrebe",
+    "ctaContact": "Kontaktirajte nas",
+    "ctaPortfolio": "Portfolio"
+  },
+  "about": {
+    "title": "O nama",
+    "subtitle": "Studio za arhitekturu i dizajn enterijera",
+    "description": "Sa više od 15 godina iskustva u arhitektonskom projektovanju i dizajnu enterijera, naš studio kombinuje funkcionalnost, estetiku i inovativne materijale kako bismo kreirali prostore koji nadmašuju očekivanja. Svaki projekat je jedinstvena priča koja nastaje kroz pažljivo slušanje klijentovih potreba i transformaciju ideja u konkretne, živuće prostore.",
+    "experience": "15+ godina iskustva",
+    "projects": "200+ realizovanih projekata",
+    "clients": "Zadovoljni klijenti"
+  },
+  "services": {
+    "title": "Usluge",
+    "subtitle": "Kompletan spektar arhitektonskih i dizajnerskih rešenja",
+    "architectural": {
+      "title": "Arhitektonsko projektovanje",
+      "description": "Kompletan arhitektonski projekat od konceptualne faze do izvedbe, uključujući tehničku dokumentaciju i nadzor radova."
+    },
+    "interior": {
+      "title": "Dizajn enterijera",
+      "description": "Kreiranje funkcionalnih i estetski savršenih enterijera koji odražavaju vaš stil života i potrebe."
+    },
+    "visualization": {
+      "title": "3D vizualizacije",
+      "description": "Fotorealistične 3D vizualizacije koje vam omogućavaju da vidite projekat pre realizacije."
+    },
+    "consultation": {
+      "title": "Konsultacije",
+      "description": "Stručne konsultacije za optimizaciju prostora, izbor materijala i arhitektonska rešenja."
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Naši najnoviji projekti",
+    "viewProject": "Pogledaj projekat",
+    "project1": {
+      "title": "Moderna vila",
+      "category": "Rezidencijalna arhitektura"
+    },
+    "project2": {
+      "title": "Luksuzni enterijer",
+      "category": "Dizajn enterijera"
+    },
+    "project3": {
+      "title": "Poslovni prostor",
+      "category": "Komercijalna arhitektura"
+    },
+    "project4": {
+      "title": "Minimalistički stan",
+      "category": "Dizajn enterijera"
+    },
+    "project5": {
+      "title": "Restoran",
+      "category": "Horeka dizajn"
+    },
+    "project6": {
+      "title": "Loft prostor",
+      "category": "Adaptacija"
+    }
+  },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Javite nam se",
+    "form": {
+      "name": "Ime",
+      "email": "Email",
+      "phone": "Telefon",
+      "message": "Poruka",
+      "send": "Pošalji"
+    },
+    "info": {
+      "phone": "Telefon",
+      "email": "Email",
+      "location": "Lokacija",
+      "address": "Beograd, Srbija"
+    }
+  },
+  "footer": {
+    "quickLinks": "Brzi linkovi",
+    "contactInfo": "Kontakt informacije",
+    "rights": "Sva prava zadržana"
+  }
+}

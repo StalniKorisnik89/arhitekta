@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "contact": "Contact"
+  },
+  "hero": {
+    "headline": "Architecture that brings space to life",
+    "subtitle": "We create functional and aesthetically exceptional spaces that reflect your vision and needs",
+    "ctaContact": "Contact us",
+    "ctaPortfolio": "Portfolio"
+  },
+  "about": {
+    "title": "About us",
+    "subtitle": "Architecture and interior design studio",
+    "description": "With over 15 years of experience in architectural design and interior design, our studio combines functionality, aesthetics, and innovative materials to create spaces that exceed expectations. Each project is a unique story that emerges through careful listening to the client's needs and transforming ideas into concrete, livable spaces.",
+    "experience": "15+ years of experience",
+    "projects": "200+ completed projects",
+    "clients": "Satisfied clients"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Complete range of architectural and design solutions",
+    "architectural": {
+      "title": "Architectural design",
+      "description": "Complete architectural project from conceptual phase to execution, including technical documentation and construction supervision."
+    },
+    "interior": {
+      "title": "Interior design",
+      "description": "Creating functional and aesthetically perfect interiors that reflect your lifestyle and needs."
+    },
+    "visualization": {
+      "title": "3D visualizations",
+      "description": "Photorealistic 3D visualizations that allow you to see the project before realization."
+    },
+    "consultation": {
+      "title": "Consultations",
+      "description": "Expert consultations for space optimization, material selection, and architectural solutions."
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Our latest projects",
+    "viewProject": "View project",
+    "project1": {
+      "title": "Modern villa",
+      "category": "Residential architecture"
+    },
+    "project2": {
+      "title": "Luxury interior",
+      "category": "Interior design"
+    },
+    "project3": {
+      "title": "Business space",
+      "category": "Commercial architecture"
+    },
+    "project4": {
+      "title": "Minimalist apartment",
+      "category": "Interior design"
+    },
+    "project5": {
+      "title": "Restaurant",
+      "category": "Horeca design"
+    },
+    "project6": {
+      "title": "Loft space",
+      "category": "Adaptation"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "send": "Send"
+    },
+    "info": {
+      "phone": "Phone",
+      "email": "Email",
+      "location": "Location",
+      "address": "Belgrade, Serbia"
+    }
+  },
+  "footer": {
+    "quickLinks": "Quick links",
+    "contactInfo": "Contact information",
+    "rights": "All rights reserved"
+  }
+}

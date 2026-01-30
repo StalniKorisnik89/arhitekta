@@ -1,0 +1,125 @@
+{
+  "about": {
+    "title": "O nama",
+    "subtitle": "Studio za arhitekturu i dizajn enterijera",
+    "description": "Sa više od 15 godina iskustva u arhitektonskom projektovanju i dizajnu enterijera, naš studio kombinuje funkcionalnost, estetiku i inovativne materijale kako bismo kreirali prostore koji nadmašuju očekivanja. Svaki projekat je jedinstvena priča koja nastaje kroz pažljivo slušanje klijentovih potreba i transformaciju ideja u konkretne, živuće prostore.",
+    "stats": {
+      "experience": "15+",
+      "projects": "200+",
+      "clients": "100%"
+    }
+  },
+  "services": [
+    {
+      "id": 1,
+      "title": "Arhitektonsko projektovanje",
+      "description": "Kompletan arhitektonski projekat od konceptualne faze do izvedbe, uključujući tehničku dokumentaciju i nadzor radova."
+    },
+    {
+      "id": 2,
+      "title": "Dizajn enterijera",
+      "description": "Kreiranje funkcionalnih i estetski savršenih enterijera koji odražavaju vaš stil života i potrebe."
+    },
+    {
+      "id": 3,
+      "title": "3D vizualizacije",
+      "description": "Fotorealistične 3D vizualizacije koje vam omogućavaju da vidite projekat pre realizacije."
+    },
+    {
+      "id": 4,
+      "title": "Konsultacije",
+      "description": "Stručne konsultacije za optimizaciju prostora, izbor materijala i arhitektonska rešenja."
+    }
+  ],
+  "portfolio": [
+    {
+      "id": 1,
+      "title": "Moderna vila",
+      "category": "Rezidencijalna arhitektura",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "description": "Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću.",
+      "specs": {
+        "area": "450 m²",
+        "year": "2023",
+        "location": "Beograd",
+        "status": "Završeno"
+      },
+      "gallery": []
+    },
+    {
+      "id": 2,
+      "title": "Luksuzni enterijer",
+      "category": "Dizajn enterijera",
+      "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "description": "Luksuzni enterijer dizajniran sa pažnjom na svaki detalj.",
+      "specs": {
+        "area": "280 m²",
+        "year": "2023",
+        "location": "Novi Sad",
+        "status": "Završeno"
+      },
+      "gallery": []
+    },
+    {
+      "id": 3,
+      "title": "Poslovni prostor",
+      "category": "Komercijalna arhitektura",
+      "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "description": "Savremeni poslovni prostor dizajniran za produktivnost i komfor.",
+      "specs": {
+        "area": "850 m²",
+        "year": "2022",
+        "location": "Beograd",
+        "status": "Završeno"
+      },
+      "gallery": []
+    },
+    {
+      "id": 4,
+      "title": "Minimalistički stan",
+      "category": "Dizajn enterijera",
+      "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "description": "Minimalistički pristup dizajnu koji naglašava čistotu linija i funkcionalnost.",
+      "specs": {
+        "area": "95 m²",
+        "year": "2023",
+        "location": "Beograd",
+        "status": "Završeno"
+      },
+      "gallery": []
+    },
+    {
+      "id": 5,
+      "title": "Restoran",
+      "category": "Horeka dizajn",
+      "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "description": "Elegantan restoran sa atmosferom koja kombinuje moderni dizajn sa toplinom tradicionalnih elemenata.",
+      "specs": {
+        "area": "320 m²",
+        "year": "2022",
+        "location": "Beograd",
+        "status": "Završeno"
+      },
+      "gallery": []
+    },
+    {
+      "id": 6,
+      "title": "Loft prostor",
+      "category": "Adaptacija",
+      "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "description": "Industrijski prostor transformisan u moderan i funkcionalan stan.",
+      "specs": {
+        "area": "180 m²",
+        "year": "2023",
+        "location": "Beograd",
+        "status": "Završeno"
+      },
+      "gallery": []
+    }
+  ],
+  "contact": {
+    "phone": "+381 11 123 4567",
+    "email": "info@studio.rs",
+    "address": "Beograd, Srbija"
+  }
+}
