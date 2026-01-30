@@ -7,7 +7,22 @@ let githubConfig = {
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const DATA_FILE_PATH = 'data/content.json';
-const DEFAULT_BRANCH = 'main'; // Default branch name
+let DEFAULT_BRANCH = 'main'; // Will be detected from repo
+
+// Detect default branch from repository
+async function detectDefaultBranch() {
+    try {
+        const repoInfo = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
+        if (repoInfo && repoInfo.default_branch) {
+            DEFAULT_BRANCH = repoInfo.default_branch;
+            console.log('Detected default branch:', DEFAULT_BRANCH);
+            return DEFAULT_BRANCH;
+        }
+    } catch (error) {
+        console.warn('Could not detect default branch, using "main":', error);
+    }
+    return DEFAULT_BRANCH;
+}
 
 // ===== Utility Functions =====
 function showLoading(show = true) {
@@ -520,13 +535,16 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
             
+            // Detect default branch
+            await detectDefaultBranch();
+            
             // Save config
             localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
             
             // Show dashboard
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('admin-dashboard').style.display = 'block';
-            document.getElementById('repo-info').textContent = `${githubConfig.owner}/${githubConfig.repo}`;
+            document.getElementById('repo-info').textContent = `${githubConfig.owner}/${githubConfig.repo} (${DEFAULT_BRANCH})`;
             
             loadData();
         } catch (error) {
