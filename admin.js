@@ -7,6 +7,7 @@ let githubConfig = {
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const DATA_FILE_PATH = 'data/content.json';
+const DEFAULT_BRANCH = 'main'; // Default branch name
 
 // ===== Utility Functions =====
 function showLoading(show = true) {
@@ -84,7 +85,8 @@ async function getFileContent(path) {
         const pathParts = path.split('/');
         const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
         
-        const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`);
+        // Include branch in URL to ensure we're working with the correct branch
+        const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}?ref=${DEFAULT_BRANCH}`);
         
         if (response && response.content) {
             // GitHub API always returns base64 encoded content
@@ -128,6 +130,11 @@ async function updateFile(path, content, sha, message = 'Update content') {
         // GitHub API expects path segments to be separated by /, not URL encoded
         const pathParts = path.split('/');
         const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
+        
+        // Include branch in body for updates
+        if (sha) {
+            body.branch = DEFAULT_BRANCH;
+        }
         
         await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
             method: 'PUT',
