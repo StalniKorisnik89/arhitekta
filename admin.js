@@ -155,10 +155,31 @@ async function updateFile(path, content, sha, message = 'Update content') {
         return true;
     } catch (error) {
         console.error('Error updating file:', error);
-        // If error is 404 and we have sha, try creating instead
-        if (error.message && error.message.includes('404') && sha) {
-            console.log('File not found with SHA, trying to create new file...');
-            return await updateFile(path, content, null, message);
+        // If error is 404, it means file doesn't exist
+        // If we had SHA, it might be outdated, try without SHA
+        if (error.message && (error.message.includes('404') || error.message.includes('nije pronađen'))) {
+            if (sha) {
+                console.log('File not found with provided SHA, trying to create new file without SHA...');
+                // Remove SHA and try again
+                const newBody = {
+                    message: message,
+                    content: contentBase64,
+                    branch: DEFAULT_BRANCH
+                };
+                try {
+                    await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(newBody)
+                    });
+                    return true;
+                } catch (retryError) {
+                    console.error('Retry failed:', retryError);
+                    throw retryError;
+                }
+            } else {
+                // We're already trying to create, but it failed
+                throw new Error('Ne mogu da kreiram fajl. Proverite dozvole tokena i da li repozitorijum postoji.');
+            }
         }
         throw error;
     }
@@ -215,37 +236,70 @@ async function loadData() {
 async function saveData(commitMessage = 'Update content') {
     showLoading(true);
     try {
-        // First, try to get current file to check if it exists and get SHA
+        // Always check current file state first
         let fileInfo = null;
+        let fileExists = false;
+        
         try {
             fileInfo = await getFileContent(DATA_FILE_PATH);
+            if (fileInfo && fileInfo.sha) {
+                fileExists = true;
+                currentSha = fileInfo.sha;
+                console.log('File exists with SHA:', currentSha);
+            }
         } catch (getError) {
-            console.log('Could not get file info, will try to create:', getError);
+            console.log('File does not exist or error getting file:', getError);
+            fileExists = false;
+            currentSha = null;
         }
         
-        if (fileInfo && fileInfo.sha) {
-            // File exists, update it
-            currentSha = fileInfo.sha;
+        // Update or create file based on existence
+        if (fileExists && currentSha) {
+            console.log('Updating existing file with SHA:', currentSha);
             await updateFile(DATA_FILE_PATH, currentData, currentSha, commitMessage);
         } else {
-            // File doesn't exist, create it
+            console.log('Creating new file (no SHA)');
             await updateFile(DATA_FILE_PATH, currentData, null, commitMessage);
         }
         
-        // Wait a bit for GitHub to process
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Wait a bit for GitHub to process the commit
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Reload to get new SHA
-        const result = await getFileContent(DATA_FILE_PATH);
-        if (result && result.sha) {
-            currentSha = result.sha;
+        // Reload to get new SHA for next update
+        try {
+            const result = await getFileContent(DATA_FILE_PATH);
+            if (result && result.sha) {
+                currentSha = result.sha;
+                console.log('Updated SHA after save:', currentSha);
+            }
+        } catch (reloadError) {
+            console.warn('Could not reload file after save:', reloadError);
+            // This is not critical, continue
         }
         
         showNotification('Podaci uspešno sačuvani', 'success');
     } catch (error) {
         console.error('Save data error:', error);
         const errorMsg = error.message || 'Nepoznata greška';
-        showNotification('Greška pri čuvanju: ' + errorMsg, 'error');
+        
+        // More helpful error message
+        if (errorMsg.includes('404') || errorMsg.includes('nije pronađen')) {
+            showNotification('Fajl nije pronađen. Pokušavam da kreiram novi fajl...', 'error');
+            // Try to create file without SHA
+            try {
+                await updateFile(DATA_FILE_PATH, currentData, null, commitMessage);
+                showNotification('Fajl uspešno kreiran!', 'success');
+                // Reload SHA
+                const result = await getFileContent(DATA_FILE_PATH);
+                if (result && result.sha) {
+                    currentSha = result.sha;
+                }
+            } catch (createError) {
+                showNotification('Greška pri kreiranju fajla: ' + createError.message, 'error');
+            }
+        } else {
+            showNotification('Greška pri čuvanju: ' + errorMsg, 'error');
+        }
     } finally {
         showLoading(false);
     }
