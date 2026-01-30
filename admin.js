@@ -138,9 +138,14 @@ async function updateFile(path, content, sha, message = 'Update content') {
     // Encode to base64 - handle UTF-8 characters properly
     const contentBase64 = btoa(unescape(encodeURIComponent(contentString)));
     
+    // GitHub API expects path segments to be separated by /, not URL encoded
+    const pathParts = path.split('/');
+    const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
+    
     const body = {
         message: message,
-        content: contentBase64
+        content: contentBase64,
+        branch: DEFAULT_BRANCH
     };
     
     // Only include sha if file exists (for updates)
@@ -149,13 +154,6 @@ async function updateFile(path, content, sha, message = 'Update content') {
     }
 
     try {
-        // GitHub API expects path segments to be separated by /, not URL encoded
-        const pathParts = path.split('/');
-        const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
-        
-        // Always include branch in body
-        body.branch = DEFAULT_BRANCH;
-        
         console.log('Updating file:', {
             path: encodedPath,
             hasSha: !!sha,
@@ -171,7 +169,6 @@ async function updateFile(path, content, sha, message = 'Update content') {
         });
         
         console.log('File update response:', response);
-        return response;
         return true;
     } catch (error) {
         console.error('Error updating file:', error);
