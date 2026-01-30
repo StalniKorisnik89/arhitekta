@@ -177,6 +177,10 @@ async function updateFile(path, content, sha, message = 'Update content') {
         if (error.message && (error.message.includes('404') || error.message.includes('nije pronađen'))) {
             if (sha) {
                 console.log('File not found with provided SHA, trying to create new file without SHA...');
+                // Re-encode path for retry (encodedPath might not be in scope here)
+                const retryPathParts = path.split('/');
+                const retryEncodedPath = retryPathParts.map(part => encodeURIComponent(part)).join('/');
+                
                 // Remove SHA and try again
                 const newBody = {
                     message: message,
@@ -184,7 +188,7 @@ async function updateFile(path, content, sha, message = 'Update content') {
                     branch: DEFAULT_BRANCH
                 };
                 try {
-                    await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
+                    await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${retryEncodedPath}`, {
                         method: 'PUT',
                         body: JSON.stringify(newBody)
                     });
