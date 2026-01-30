@@ -85,6 +85,13 @@ async function getFileContent(path) {
         const pathParts = path.split('/');
         const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
         
+        console.log('Getting file:', {
+            path: encodedPath,
+            owner: githubConfig.owner,
+            repo: githubConfig.repo,
+            branch: DEFAULT_BRANCH
+        });
+        
         // Include branch in URL to ensure we're working with the correct branch
         const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}?ref=${DEFAULT_BRANCH}`);
         
@@ -131,10 +138,15 @@ async function updateFile(path, content, sha, message = 'Update content') {
         const pathParts = path.split('/');
         const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
         
-        // Include branch in body for updates
-        if (sha) {
-            body.branch = DEFAULT_BRANCH;
-        }
+        // Always include branch in body
+        body.branch = DEFAULT_BRANCH;
+        
+        console.log('Updating file:', {
+            path: encodedPath,
+            hasSha: !!sha,
+            owner: githubConfig.owner,
+            repo: githubConfig.repo
+        });
         
         await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
             method: 'PUT',
