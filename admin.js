@@ -50,8 +50,24 @@ async function githubRequest(endpoint, options = {}) {
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || `HTTP error! status: ${response.status}`);
+            let errorMessage = `HTTP error! status: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+                
+                // More specific error messages
+                if (response.status === 404) {
+                    errorMessage = 'Fajl nije pronađen. Proverite putanju i da li fajl postoji u repozitorijumu.';
+                } else if (response.status === 401) {
+                    errorMessage = 'Neautorizovan pristup. Proverite da li je token ispravan i ima dozvole.';
+                } else if (response.status === 403) {
+                    errorMessage = 'Zabranjen pristup. Proverite dozvole tokena (potrebna "repo" dozvola).';
+                }
+            } catch (e) {
+                // If error response is not JSON, use status text
+                errorMessage = response.statusText || errorMessage;
+            }
+            throw new Error(errorMessage);
         }
 
         return await response.json();
