@@ -79,28 +79,27 @@ async function githubRequest(endpoint, options = {}) {
 
 async function getFileContent(path) {
     try {
-        // URL encode the path to handle special characters
-        const encodedPath = encodeURIComponent(path).replace(/%2F/g, '/');
+        // GitHub API expects path segments to be separated by /, not URL encoded
+        // But we need to handle special characters in path segments
+        const pathParts = path.split('/');
+        const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
+        
         const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`);
         
-        if (response.content) {
-            // Handle both base64 encoded content and direct content
-            let content;
-            if (response.encoding === 'base64') {
-                content = atob(response.content.replace(/\s/g, ''));
-            } else {
-                content = response.content;
-            }
+        if (response && response.content) {
+            // GitHub API always returns base64 encoded content
+            const base64Content = response.content.replace(/\s/g, '');
+            const decodedContent = atob(base64Content);
             
             return {
-                content: JSON.parse(content),
+                content: JSON.parse(decodedContent),
                 sha: response.sha
             };
         }
         return null;
     } catch (error) {
         // If file doesn't exist (404), return null instead of throwing
-        if (error.message && error.message.includes('404')) {
+        if (error.message && (error.message.includes('404') || error.message.includes('nije pronađen'))) {
             console.log('File does not exist, will be created:', path);
             return null;
         }
@@ -112,6 +111,7 @@ async function getFileContent(path) {
 async function updateFile(path, content, sha, message = 'Update content') {
     // Ensure content is properly formatted JSON string
     const contentString = JSON.stringify(content, null, 2);
+    // Encode to base64 - handle UTF-8 characters properly
     const contentBase64 = btoa(unescape(encodeURIComponent(contentString)));
     
     const body = {
@@ -125,8 +125,10 @@ async function updateFile(path, content, sha, message = 'Update content') {
     }
 
     try {
-        // URL encode the path
-        const encodedPath = encodeURIComponent(path).replace(/%2F/g, '/');
+        // GitHub API expects path segments to be separated by /, not URL encoded
+        const pathParts = path.split('/');
+        const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
+        
         await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
             method: 'PUT',
             body: JSON.stringify(body)
@@ -134,6 +136,11 @@ async function updateFile(path, content, sha, message = 'Update content') {
         return true;
     } catch (error) {
         console.error('Error updating file:', error);
+        // If error is 404 and we have sha, try creating instead
+        if (error.message && error.message.includes('404') && sha) {
+            console.log('File not found with SHA, trying to create new file...');
+            return await updateFile(path, content, null, message);
+        }
         throw error;
     }
 }
@@ -189,20 +196,29 @@ async function loadData() {
 async function saveData(commitMessage = 'Update content') {
     showLoading(true);
     try {
-        if (currentSha) {
-            // Update existing file
+        // First, try to get current file to check if it exists and get SHA
+        let fileInfo = null;
+        try {
+            fileInfo = await getFileContent(DATA_FILE_PATH);
+        } catch (getError) {
+            console.log('Could not get file info, will try to create:', getError);
+        }
+        
+        if (fileInfo && fileInfo.sha) {
+            // File exists, update it
+            currentSha = fileInfo.sha;
             await updateFile(DATA_FILE_PATH, currentData, currentSha, commitMessage);
         } else {
-            // Create new file
-            await createFile(DATA_FILE_PATH, currentData, commitMessage);
+            // File doesn't exist, create it
+            await updateFile(DATA_FILE_PATH, currentData, null, commitMessage);
         }
         
         // Wait a bit for GitHub to process
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1500));
         
         // Reload to get new SHA
         const result = await getFileContent(DATA_FILE_PATH);
-        if (result) {
+        if (result && result.sha) {
             currentSha = result.sha;
         }
         
