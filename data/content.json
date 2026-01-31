@@ -1,8 +1,8 @@
 {
   "about": {
-    "title": "O nama",
+    "title": "O namaa",
     "subtitle": "Studio za arhitekturu i dizajn enterijera",
-    "description": "Sa više od 15 godina iskustva u arhitektonskom projektovanju i dizajnu enterijera, naš studio kombinuje funkcionalnost, estetiku i inovativne materijale kako bismo kreirali prostore koji nadmašuju očekivanja. Svaki projekat je jedinstvena priča koja nastaje kroz pažljivo slušanje klijentovih potreba i transformaciju ideja u konkretne, živuće prostore.",
+    "description": "Sa viÃÂÃÂ¡e od 15 godina iskustva u arhitektonskom projektovanju i dizajnu enterijera, naÃÂÃÂ¡ studio kombinuje funkcionalnost, estetiku i inovativne materijale kako bismo kreirali prostore koji nadmaÃÂÃÂ¡uju oÃÂÃÂekivanja. Svaki projekat je jedinstvena priÃÂÃÂa koja nastaje kroz paÃÂÃÂ¾ljivo sluÃÂÃÂ¡anje klijentovih potreba i transformaciju ideja u konkretne, ÃÂÃÂ¾ivuÃÂÃÂe prostore.",
     "stats": {
       "experience": "15+",
       "projects": "200+",
@@ -13,22 +13,22 @@
     {
       "id": 1,
       "title": "Arhitektonsko projektovanje",
-      "description": "Kompletan arhitektonski projekat od konceptualne faze do izvedbe, uključujući tehničku dokumentaciju i nadzor radova."
+      "description": "Kompletan arhitektonski projekat od konceptualne faze do izvedbe, ukljuÃÂÃÂujuÃÂÃÂi tehniÃÂÃÂku dokumentaciju i nadzor radova."
     },
     {
       "id": 2,
       "title": "Dizajn enterijera",
-      "description": "Kreiranje funkcionalnih i estetski savršenih enterijera koji odražavaju vaš stil života i potrebe."
+      "description": "Kreiranje funkcionalnih i estetski savrÃÂÃÂ¡enih enterijera koji odraÃÂÃÂ¾avaju vaÃÂÃÂ¡ stil ÃÂÃÂ¾ivota i potrebe."
     },
     {
       "id": 3,
       "title": "3D vizualizacije",
-      "description": "Fotorealistične 3D vizualizacije koje vam omogućavaju da vidite projekat pre realizacije."
+      "description": "FotorealistiÃÂÃÂne 3D vizualizacije koje vam omoguÃÂÃÂavaju da vidite projekat pre realizacije."
     },
     {
       "id": 4,
       "title": "Konsultacije",
-      "description": "Stručne konsultacije za optimizaciju prostora, izbor materijala i arhitektonska rešenja."
+      "description": "StruÃÂÃÂne konsultacije za optimizaciju prostora, izbor materijala i arhitektonska reÃÂÃÂ¡enja."
     }
   ],
   "portfolio": [
@@ -37,12 +37,12 @@
       "title": "Moderna vila",
       "category": "Rezidencijalna arhitektura",
       "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-      "description": "Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću.",
+      "description": "Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnoÃÂÃÂ¡ÃÂÃÂu.",
       "specs": {
-        "area": "450 m²",
+        "area": "450 mÃÂÃÂ²",
         "year": "2023",
         "location": "Beograd",
-        "status": "Završeno"
+        "status": "ZavrÃÂÃÂ¡eno"
       },
       "gallery": []
     },
@@ -51,12 +51,12 @@
       "title": "Luksuzni enterijer",
       "category": "Dizajn enterijera",
       "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-      "description": "Luksuzni enterijer dizajniran sa pažnjom na svaki detalj.",
+      "description": "Luksuzni enterijer dizajniran sa paÃÂÃÂ¾njom na svaki detalj.",
       "specs": {
-        "area": "280 m²",
+        "area": "280 mÃÂÃÂ²",
         "year": "2023",
         "location": "Novi Sad",
-        "status": "Završeno"
+        "status": "ZavrÃÂÃÂ¡eno"
       },
       "gallery": []
     },
@@ -67,24 +67,24 @@
       "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
       "description": "Savremeni poslovni prostor dizajniran za produktivnost i komfor.",
       "specs": {
-        "area": "850 m²",
+        "area": "850 mÃÂÃÂ²",
         "year": "2022",
         "location": "Beograd",
-        "status": "Završeno"
+        "status": "ZavrÃÂÃÂ¡eno"
       },
       "gallery": []
     },
     {
       "id": 4,
-      "title": "Minimalistički stan",
+      "title": "MinimalistiÃÂÃÂki stan",
       "category": "Dizajn enterijera",
       "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-      "description": "Minimalistički pristup dizajnu koji naglašava čistotu linija i funkcionalnost.",
+      "description": "MinimalistiÃÂÃÂki pristup dizajnu koji naglaÃÂÃÂ¡ava ÃÂÃÂistotu linija i funkcionalnost.",
       "specs": {
-        "area": "95 m²",
+        "area": "95 mÃÂÃÂ²",
         "year": "2023",
         "location": "Beograd",
-        "status": "Završeno"
+        "status": "ZavrÃÂÃÂ¡eno"
       },
       "gallery": []
     },
@@ -95,10 +95,10 @@
       "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
       "description": "Elegantan restoran sa atmosferom koja kombinuje moderni dizajn sa toplinom tradicionalnih elemenata.",
       "specs": {
-        "area": "320 m²",
+        "area": "320 mÃÂÃÂ²",
         "year": "2022",
         "location": "Beograd",
-        "status": "Završeno"
+        "status": "ZavrÃÂÃÂ¡eno"
       },
       "gallery": []
     },
@@ -109,10 +109,10 @@
       "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
       "description": "Industrijski prostor transformisan u moderan i funkcionalan stan.",
       "specs": {
-        "area": "180 m²",
+        "area": "180 mÃÂÃÂ²",
         "year": "2023",
         "location": "Beograd",
-        "status": "Završeno"
+        "status": "ZavrÃÂÃÂ¡eno"
       },
       "gallery": []
     }
