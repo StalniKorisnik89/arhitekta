@@ -444,7 +444,7 @@ function renderPortfolio() {
         item.className = 'item-card';
         item.innerHTML = `
             <div class="item-card__image">
-                <img src="${project.image}" alt="${project.title}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                <img src="${project.image}" alt="${project.title}" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'200\'%3E%3Crect fill=\'%23ddd\' width=\'300\' height=\'200\'/%3E%3Ctext fill=\'%23999\' font-family=\'sans-serif\' font-size=\'14\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\'%3ENo Image%3C/text%3E%3C/svg%3E'">
             </div>
             <div class="item-card__content">
                 <h3>${project.title}</h3>
