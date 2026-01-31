@@ -113,7 +113,8 @@ async function getFileContent(path) {
         if (response && response.content) {
             // GitHub API always returns base64 encoded content
             const base64Content = response.content.replace(/\s/g, '');
-            const decodedContent = atob(base64Content);
+            // Decode base64 and handle UTF-8 properly
+            const decodedContent = decodeURIComponent(escape(atob(base64Content)));
             
             return {
                 content: JSON.parse(decodedContent),

@@ -5,11 +5,14 @@ let siteContent = null;
 
 async function loadSiteContent() {
     try {
-        const response = await fetch('data/content.json');
+        // Add cache busting to ensure fresh data
+        const cacheBuster = '?v=' + new Date().getTime();
+        const response = await fetch('data/content.json' + cacheBuster);
         if (!response.ok) {
             throw new Error('Failed to load content');
         }
         siteContent = await response.json();
+        console.log('Site content loaded:', siteContent);
         applyContentToPage();
     } catch (error) {
         console.error('Error loading site content:', error);
