@@ -296,6 +296,29 @@ body {
     font-size: 12px;
 }
 
+.info-text {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    color: #1976d2;
+    font-size: 0.9rem;
+}
+
+.admin-form h4 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.1rem;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-form h4:first-of-type {
+    margin-top: 0;
+}
+
 .stats-grid,
 .specs-grid {
     display: grid;

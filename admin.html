@@ -81,20 +81,57 @@
             <!-- About Tab -->
             <div id="tab-about" class="tab-content active">
                 <h2>O nama - Sadržaj</h2>
+                <p class="info-text">Unesite prevode za sve tri jezika. Ako ne unesete prevod, koristiće se srpski kao fallback.</p>
                 <form id="about-form" class="admin-form">
-                    <div class="form-group">
-                        <label for="about-title">Naslov</label>
-                        <input type="text" id="about-title" name="title" required>
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab-btn active" data-lang="sr">Srpski</button>
+                        <button type="button" class="lang-tab-btn" data-lang="en">Engleski</button>
+                        <button type="button" class="lang-tab-btn" data-lang="ru">Ruski</button>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="about-subtitle">Podnaslov</label>
-                        <input type="text" id="about-subtitle" name="subtitle" required>
+                    <div class="lang-content" data-lang="sr">
+                        <div class="form-group">
+                            <label for="about-title-sr">Naslov (SR)</label>
+                            <input type="text" id="about-title-sr" name="title-sr" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="about-subtitle-sr">Podnaslov (SR)</label>
+                            <input type="text" id="about-subtitle-sr" name="subtitle-sr" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="about-description-sr">Opis (SR)</label>
+                            <textarea id="about-description-sr" name="description-sr" rows="6" required></textarea>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="about-description">Opis</label>
-                        <textarea id="about-description" name="description" rows="6" required></textarea>
+                    <div class="lang-content" data-lang="en" style="display: none;">
+                        <div class="form-group">
+                            <label for="about-title-en">Naslov (EN)</label>
+                            <input type="text" id="about-title-en" name="title-en">
+                        </div>
+                        <div class="form-group">
+                            <label for="about-subtitle-en">Podnaslov (EN)</label>
+                            <input type="text" id="about-subtitle-en" name="subtitle-en">
+                        </div>
+                        <div class="form-group">
+                            <label for="about-description-en">Opis (EN)</label>
+                            <textarea id="about-description-en" name="description-en" rows="6"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-content" data-lang="ru" style="display: none;">
+                        <div class="form-group">
+                            <label for="about-title-ru">Naslov (RU)</label>
+                            <input type="text" id="about-title-ru" name="title-ru">
+                        </div>
+                        <div class="form-group">
+                            <label for="about-subtitle-ru">Podnaslov (RU)</label>
+                            <input type="text" id="about-subtitle-ru" name="subtitle-ru">
+                        </div>
+                        <div class="form-group">
+                            <label for="about-description-ru">Opis (RU)</label>
+                            <textarea id="about-description-ru" name="description-ru" rows="6"></textarea>
+                        </div>
                     </div>
                     
                     <h3>Statistike</h3>
@@ -176,13 +213,36 @@
             </div>
             <form id="service-form" class="admin-form">
                 <input type="hidden" id="service-id" name="id">
+                <p class="info-text">Unesite prevode za sve tri jezika. Ako ne unesete prevod, koristiće se srpski.</p>
+                
+                <h4>Srpski (SR) - Obavezno</h4>
                 <div class="form-group">
-                    <label for="service-title">Naziv usluge</label>
-                    <input type="text" id="service-title" name="title" required>
+                    <label for="service-title-sr">Naziv usluge (SR)</label>
+                    <input type="text" id="service-title-sr" name="title-sr" required>
                 </div>
                 <div class="form-group">
-                    <label for="service-description">Opis</label>
-                    <textarea id="service-description" name="description" rows="4" required></textarea>
+                    <label for="service-description-sr">Opis (SR)</label>
+                    <textarea id="service-description-sr" name="description-sr" rows="4" required></textarea>
+                </div>
+                
+                <h4>Engleski (EN) - Opciono</h4>
+                <div class="form-group">
+                    <label for="service-title-en">Naziv usluge (EN)</label>
+                    <input type="text" id="service-title-en" name="title-en">
+                </div>
+                <div class="form-group">
+                    <label for="service-description-en">Opis (EN)</label>
+                    <textarea id="service-description-en" name="description-en" rows="4"></textarea>
+                </div>
+                
+                <h4>Ruski (RU) - Opciono</h4>
+                <div class="form-group">
+                    <label for="service-title-ru">Naziv usluge (RU)</label>
+                    <input type="text" id="service-title-ru" name="title-ru">
+                </div>
+                <div class="form-group">
+                    <label for="service-description-ru">Opis (RU)</label>
+                    <textarea id="service-description-ru" name="description-ru" rows="4"></textarea>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary modal-close">Otkaži</button>
@@ -201,22 +261,54 @@
             </div>
             <form id="portfolio-form" class="admin-form">
                 <input type="hidden" id="portfolio-id" name="id">
-                <div class="form-group">
-                    <label for="portfolio-title">Naziv projekta</label>
-                    <input type="text" id="portfolio-title" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="portfolio-category">Kategorija</label>
-                    <input type="text" id="portfolio-category" name="category" required>
-                </div>
+                <p class="info-text">Unesite prevode za sve tri jezika. Ako ne unesete prevod, koristiće se srpski.</p>
+                
                 <div class="form-group">
                     <label for="portfolio-image">URL slike</label>
                     <input type="url" id="portfolio-image" name="image" required>
                     <small>Ili upload slike preko GitHub</small>
                 </div>
+                
+                <h4>Srpski (SR) - Obavezno</h4>
                 <div class="form-group">
-                    <label for="portfolio-description">Opis</label>
-                    <textarea id="portfolio-description" name="description" rows="4" required></textarea>
+                    <label for="portfolio-title-sr">Naziv projekta (SR)</label>
+                    <input type="text" id="portfolio-title-sr" name="title-sr" required>
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-category-sr">Kategorija (SR)</label>
+                    <input type="text" id="portfolio-category-sr" name="category-sr" required>
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-description-sr">Opis (SR)</label>
+                    <textarea id="portfolio-description-sr" name="description-sr" rows="4" required></textarea>
+                </div>
+                
+                <h4>Engleski (EN) - Opciono</h4>
+                <div class="form-group">
+                    <label for="portfolio-title-en">Naziv projekta (EN)</label>
+                    <input type="text" id="portfolio-title-en" name="title-en">
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-category-en">Kategorija (EN)</label>
+                    <input type="text" id="portfolio-category-en" name="category-en">
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-description-en">Opis (EN)</label>
+                    <textarea id="portfolio-description-en" name="description-en" rows="4"></textarea>
+                </div>
+                
+                <h4>Ruski (RU) - Opciono</h4>
+                <div class="form-group">
+                    <label for="portfolio-title-ru">Naziv projekta (RU)</label>
+                    <input type="text" id="portfolio-title-ru" name="title-ru">
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-category-ru">Kategorija (RU)</label>
+                    <input type="text" id="portfolio-category-ru" name="category-ru">
+                </div>
+                <div class="form-group">
+                    <label for="portfolio-description-ru">Opis (RU)</label>
+                    <textarea id="portfolio-description-ru" name="description-ru" rows="4"></textarea>
                 </div>
                 <h4>Specifikacije</h4>
                 <div class="specs-grid">

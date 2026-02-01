@@ -2,6 +2,7 @@
 let currentLanguage = localStorage.getItem('language') || 'sr';
 let translations = {};
 window.translations = translations; // Export for data-loader
+window.currentLanguage = currentLanguage; // Export for data-loader
 
 // Load translations
 async function loadTranslations(lang) {
@@ -84,6 +85,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 function switchLanguage(lang) {
     currentLanguage = lang;
     localStorage.setItem('language', lang);
+    window.currentLanguage = lang; // Export for data-loader
     
     // Update active button
     document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -95,6 +97,9 @@ function switchLanguage(lang) {
     
     // Load and apply translations
     loadTranslations(lang);
+    
+    // Trigger language change event for data-loader
+    window.dispatchEvent(new CustomEvent('languageChanged'));
 }
 
 // Initialize language on page load

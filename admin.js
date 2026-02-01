@@ -421,11 +421,32 @@ function getInitialData() {
 function populateForms() {
     if (!currentData) return;
 
-    // About form
+    // About form - support both old and new format
     if (currentData.about) {
-        document.getElementById('about-title').value = currentData.about.title || '';
-        document.getElementById('about-subtitle').value = currentData.about.subtitle || '';
-        document.getElementById('about-description').value = currentData.about.description || '';
+        // Check if new multilingual format
+        if (currentData.about.sr || currentData.about.en || currentData.about.ru) {
+            // New format
+            document.getElementById('about-title-sr').value = currentData.about.sr?.title || '';
+            document.getElementById('about-subtitle-sr').value = currentData.about.sr?.subtitle || '';
+            document.getElementById('about-description-sr').value = currentData.about.sr?.description || '';
+            document.getElementById('about-title-en').value = currentData.about.en?.title || '';
+            document.getElementById('about-subtitle-en').value = currentData.about.en?.subtitle || '';
+            document.getElementById('about-description-en').value = currentData.about.en?.description || '';
+            document.getElementById('about-title-ru').value = currentData.about.ru?.title || '';
+            document.getElementById('about-subtitle-ru').value = currentData.about.ru?.subtitle || '';
+            document.getElementById('about-description-ru').value = currentData.about.ru?.description || '';
+        } else {
+            // Old format - migrate on display
+            document.getElementById('about-title-sr').value = currentData.about.title || '';
+            document.getElementById('about-subtitle-sr').value = currentData.about.subtitle || '';
+            document.getElementById('about-description-sr').value = currentData.about.description || '';
+            document.getElementById('about-title-en').value = '';
+            document.getElementById('about-subtitle-en').value = '';
+            document.getElementById('about-description-en').value = '';
+            document.getElementById('about-title-ru').value = '';
+            document.getElementById('about-subtitle-ru').value = '';
+            document.getElementById('about-description-ru').value = '';
+        }
         document.getElementById('about-experience').value = currentData.about.stats?.experience || '';
         document.getElementById('about-projects').value = currentData.about.stats?.projects || '';
         document.getElementById('about-clients').value = currentData.about.stats?.clients || '';
@@ -458,10 +479,15 @@ function renderServices() {
     currentData.services.forEach((service, index) => {
         const item = document.createElement('div');
         item.className = 'item-card';
+        
+        // Support both old and new format
+        const title = (service.sr?.title || service.title || 'Bez naziva');
+        const description = (service.sr?.description || service.description || 'Bez opisa');
+        
         item.innerHTML = `
             <div class="item-card__content">
-                <h3>${service.title}</h3>
-                <p>${service.description}</p>
+                <h3>${title}</h3>
+                <p>${description}</p>
             </div>
             <div class="item-card__actions">
                 <button class="btn btn-small btn-secondary" onclick="editService(${service.id})">Izmeni</button>
@@ -477,8 +503,26 @@ function editService(id) {
     if (!service) return;
 
     document.getElementById('service-id').value = service.id;
-    document.getElementById('service-title').value = service.title;
-    document.getElementById('service-description').value = service.description;
+    
+    // Support both old and new format
+    if (service.sr || service.en || service.ru) {
+        // New multilingual format
+        document.getElementById('service-title-sr').value = service.sr?.title || '';
+        document.getElementById('service-description-sr').value = service.sr?.description || '';
+        document.getElementById('service-title-en').value = service.en?.title || '';
+        document.getElementById('service-description-en').value = service.en?.description || '';
+        document.getElementById('service-title-ru').value = service.ru?.title || '';
+        document.getElementById('service-description-ru').value = service.ru?.description || '';
+    } else {
+        // Old format
+        document.getElementById('service-title-sr').value = service.title || '';
+        document.getElementById('service-description-sr').value = service.description || '';
+        document.getElementById('service-title-en').value = '';
+        document.getElementById('service-description-en').value = '';
+        document.getElementById('service-title-ru').value = '';
+        document.getElementById('service-description-ru').value = '';
+    }
+    
     document.getElementById('service-modal-title').textContent = 'Izmeni uslugu';
     
     openModal('service-modal');
@@ -536,10 +580,33 @@ function editPortfolio(id) {
     if (!project) return;
 
     document.getElementById('portfolio-id').value = project.id;
-    document.getElementById('portfolio-title').value = project.title;
-    document.getElementById('portfolio-category').value = project.category;
-    document.getElementById('portfolio-image').value = project.image;
-    document.getElementById('portfolio-description').value = project.description;
+    document.getElementById('portfolio-image').value = project.image || '';
+    
+    // Support both old and new format
+    if (project.sr || project.en || project.ru) {
+        // New multilingual format
+        document.getElementById('portfolio-title-sr').value = project.sr?.title || '';
+        document.getElementById('portfolio-category-sr').value = project.sr?.category || '';
+        document.getElementById('portfolio-description-sr').value = project.sr?.description || '';
+        document.getElementById('portfolio-title-en').value = project.en?.title || '';
+        document.getElementById('portfolio-category-en').value = project.en?.category || '';
+        document.getElementById('portfolio-description-en').value = project.en?.description || '';
+        document.getElementById('portfolio-title-ru').value = project.ru?.title || '';
+        document.getElementById('portfolio-category-ru').value = project.ru?.category || '';
+        document.getElementById('portfolio-description-ru').value = project.ru?.description || '';
+    } else {
+        // Old format
+        document.getElementById('portfolio-title-sr').value = project.title || '';
+        document.getElementById('portfolio-category-sr').value = project.category || '';
+        document.getElementById('portfolio-description-sr').value = project.description || '';
+        document.getElementById('portfolio-title-en').value = '';
+        document.getElementById('portfolio-category-en').value = '';
+        document.getElementById('portfolio-description-en').value = '';
+        document.getElementById('portfolio-title-ru').value = '';
+        document.getElementById('portfolio-category-ru').value = '';
+        document.getElementById('portfolio-description-ru').value = '';
+    }
+    
     document.getElementById('portfolio-area').value = project.specs?.area || '';
     document.getElementById('portfolio-year').value = project.specs?.year || '';
     document.getElementById('portfolio-location').value = project.specs?.location || '';
@@ -661,16 +728,57 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         
-        currentData.about = {
-            title: formData.get('title'),
-            subtitle: formData.get('subtitle'),
-            description: formData.get('description'),
-            stats: {
-                experience: formData.get('experience'),
-                projects: formData.get('projects'),
-                clients: formData.get('clients')
-            }
-        };
+        // Migrate old format to new multilingual format if needed
+        if (!currentData.about.sr && !currentData.about.en && !currentData.about.ru) {
+            // Old format - migrate
+            const oldAbout = currentData.about;
+            currentData.about = {
+                sr: {
+                    title: oldAbout.title || formData.get('title-sr'),
+                    subtitle: oldAbout.subtitle || formData.get('subtitle-sr'),
+                    description: oldAbout.description || formData.get('description-sr')
+                },
+                en: {
+                    title: formData.get('title-en') || oldAbout.title,
+                    subtitle: formData.get('subtitle-en') || oldAbout.subtitle,
+                    description: formData.get('description-en') || oldAbout.description
+                },
+                ru: {
+                    title: formData.get('title-ru') || oldAbout.title,
+                    subtitle: formData.get('subtitle-ru') || oldAbout.subtitle,
+                    description: formData.get('description-ru') || oldAbout.description
+                },
+                stats: oldAbout.stats || {
+                    experience: formData.get('experience'),
+                    projects: formData.get('projects'),
+                    clients: formData.get('clients')
+                }
+            };
+        } else {
+            // New format - update
+            currentData.about = {
+                sr: {
+                    title: formData.get('title-sr'),
+                    subtitle: formData.get('subtitle-sr'),
+                    description: formData.get('description-sr')
+                },
+                en: {
+                    title: formData.get('title-en') || formData.get('title-sr'),
+                    subtitle: formData.get('subtitle-en') || formData.get('subtitle-sr'),
+                    description: formData.get('description-en') || formData.get('description-sr')
+                },
+                ru: {
+                    title: formData.get('title-ru') || formData.get('title-sr'),
+                    subtitle: formData.get('subtitle-ru') || formData.get('subtitle-sr'),
+                    description: formData.get('description-ru') || formData.get('description-sr')
+                },
+                stats: currentData.about.stats || {
+                    experience: formData.get('experience'),
+                    projects: formData.get('projects'),
+                    clients: formData.get('clients')
+                }
+            };
+        }
         
         await saveData('Update about section');
     });
@@ -697,9 +805,39 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const service = {
             id: id ? parseInt(id) : (currentData.services.length > 0 ? Math.max(...currentData.services.map(s => s.id)) + 1 : 1),
-            title: formData.get('title'),
-            description: formData.get('description')
+            sr: {
+                title: formData.get('title-sr'),
+                description: formData.get('description-sr')
+            },
+            en: {
+                title: formData.get('title-en') || formData.get('title-sr'),
+                description: formData.get('description-en') || formData.get('description-sr')
+            },
+            ru: {
+                title: formData.get('title-ru') || formData.get('title-sr'),
+                description: formData.get('description-ru') || formData.get('description-sr')
+            }
         };
+        
+        // Migrate old format if exists
+        if (id) {
+            const oldService = currentData.services.find(s => s.id === parseInt(id));
+            if (oldService && !oldService.sr && !oldService.en && !oldService.ru) {
+                // Old format - migrate
+                service.sr = {
+                    title: oldService.title || service.sr.title,
+                    description: oldService.description || service.sr.description
+                };
+                service.en = {
+                    title: service.en.title || oldService.title,
+                    description: service.en.description || oldService.description
+                };
+                service.ru = {
+                    title: service.ru.title || oldService.title,
+                    description: service.ru.description || oldService.description
+                };
+            }
+        }
         
         if (id) {
             const index = currentData.services.findIndex(s => s.id === parseInt(id));
@@ -722,10 +860,22 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const project = {
             id: id ? parseInt(id) : (currentData.portfolio.length > 0 ? Math.max(...currentData.portfolio.map(p => p.id)) + 1 : 1),
-            title: formData.get('title'),
-            category: formData.get('category'),
+            sr: {
+                title: formData.get('title-sr'),
+                category: formData.get('category-sr'),
+                description: formData.get('description-sr')
+            },
+            en: {
+                title: formData.get('title-en') || formData.get('title-sr'),
+                category: formData.get('category-en') || formData.get('category-sr'),
+                description: formData.get('description-en') || formData.get('description-sr')
+            },
+            ru: {
+                title: formData.get('title-ru') || formData.get('title-sr'),
+                category: formData.get('category-ru') || formData.get('category-sr'),
+                description: formData.get('description-ru') || formData.get('description-sr')
+            },
             image: formData.get('image'),
-            description: formData.get('description'),
             specs: {
                 area: formData.get('area'),
                 year: formData.get('year'),
@@ -735,11 +885,35 @@ document.addEventListener('DOMContentLoaded', () => {
             gallery: []
         };
         
+        // Migrate old format if exists
+        if (id) {
+            const oldProject = currentData.portfolio.find(p => p.id === parseInt(id));
+            if (oldProject && !oldProject.sr && !oldProject.en && !oldProject.ru) {
+                // Old format - migrate
+                project.sr = {
+                    title: oldProject.title || project.sr.title,
+                    category: oldProject.category || project.sr.category,
+                    description: oldProject.description || project.sr.description
+                };
+                project.en = {
+                    title: project.en.title || oldProject.title,
+                    category: project.en.category || oldProject.category,
+                    description: project.en.description || oldProject.description
+                };
+                project.ru = {
+                    title: project.ru.title || oldProject.title,
+                    category: project.ru.category || oldProject.category,
+                    description: project.ru.description || oldProject.description
+                };
+                project.gallery = oldProject.gallery || [];
+            } else if (oldProject) {
+                project.gallery = oldProject.gallery || [];
+            }
+        }
+        
         if (id) {
             const index = currentData.portfolio.findIndex(p => p.id === parseInt(id));
             if (index !== -1) {
-                // Preserve existing gallery
-                project.gallery = currentData.portfolio[index].gallery || [];
                 currentData.portfolio[index] = project;
             }
         } else {

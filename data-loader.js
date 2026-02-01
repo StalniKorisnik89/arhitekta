@@ -55,16 +55,29 @@ function getDefaultContent() {
 
 function applyContentToPage() {
     if (!siteContent) return;
+    
+    // Get current language from script.js
+    const currentLang = window.currentLanguage || localStorage.getItem('language') || 'sr';
 
-    // Update About section
+    // Update About section - support both old and new multilingual format
     if (siteContent.about) {
         const aboutTitle = document.querySelector('#about .section__title');
         const aboutSubtitle = document.querySelector('#about .section__subtitle');
         const aboutDescription = document.querySelector('.about__description');
         
-        if (aboutTitle) aboutTitle.textContent = siteContent.about.title;
-        if (aboutSubtitle) aboutSubtitle.textContent = siteContent.about.subtitle;
-        if (aboutDescription) aboutDescription.textContent = siteContent.about.description;
+        // Check if new multilingual format
+        if (siteContent.about.sr || siteContent.about.en || siteContent.about.ru) {
+            // New format - use current language, fallback to sr
+            const aboutData = siteContent.about[currentLang] || siteContent.about.sr || {};
+            if (aboutTitle) aboutTitle.textContent = aboutData.title || '';
+            if (aboutSubtitle) aboutSubtitle.textContent = aboutData.subtitle || '';
+            if (aboutDescription) aboutDescription.textContent = aboutData.description || '';
+        } else {
+            // Old format
+            if (aboutTitle) aboutTitle.textContent = siteContent.about.title || '';
+            if (aboutSubtitle) aboutSubtitle.textContent = siteContent.about.subtitle || '';
+            if (aboutDescription) aboutDescription.textContent = siteContent.about.description || '';
+        }
 
         // Update stats
         if (siteContent.about.stats) {
@@ -148,6 +161,22 @@ function createServiceCard(service, index) {
     const card = document.createElement('div');
     card.className = 'service-card';
     
+    // Get current language
+    const currentLang = window.currentLanguage || localStorage.getItem('language') || 'sr';
+    
+    // Support both old and new format
+    let title, description;
+    if (service.sr || service.en || service.ru) {
+        // New multilingual format
+        const serviceData = service[currentLang] || service.sr || {};
+        title = serviceData.title || '';
+        description = serviceData.description || '';
+    } else {
+        // Old format
+        title = service.title || '';
+        description = service.description || '';
+    }
+    
     const icons = [
         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -172,8 +201,8 @@ function createServiceCard(service, index) {
         <div class="service-card__icon">
             ${icons[index % icons.length]}
         </div>
-        <h3 class="service-card__title">${service.title}</h3>
-        <p class="service-card__description">${service.description}</p>
+        <h3 class="service-card__title">${title}</h3>
+        <p class="service-card__description">${description}</p>
     `;
     
     return card;
@@ -183,15 +212,34 @@ function createPortfolioItem(project) {
     const item = document.createElement('div');
     item.className = 'portfolio-item';
     
+    // Get current language
+    const currentLang = window.currentLanguage || localStorage.getItem('language') || 'sr';
+    
+    // Support both old and new format
+    let title, category;
+    if (project.sr || project.en || project.ru) {
+        // New multilingual format
+        const projectData = project[currentLang] || project.sr || {};
+        title = projectData.title || '';
+        category = projectData.category || '';
+    } else {
+        // Old format
+        title = project.title || '';
+        category = project.category || '';
+    }
+    
+    // Get translation for "View project" link
+    const viewProjectText = window.translations?.portfolio?.viewProject || 'Pogledaj projekat';
+    
     item.innerHTML = `
         <div class="portfolio-item__image">
-            <img src="${project.image}" alt="${project.title}" loading="lazy">
+            <img src="${project.image || ''}" alt="${title}" loading="lazy">
         </div>
         <div class="portfolio-item__overlay">
             <div class="portfolio-item__content">
-                <h3 class="portfolio-item__title">${project.title}</h3>
-                <p class="portfolio-item__category">${project.category}</p>
-                <a href="portfolio-detail.html?id=${project.id}" class="portfolio-item__link">Pogledaj projekat</a>
+                <h3 class="portfolio-item__title">${title}</h3>
+                <p class="portfolio-item__category">${category}</p>
+                <a href="portfolio-detail.html?id=${project.id}" class="portfolio-item__link">${viewProjectText}</a>
             </div>
         </div>
     `;
