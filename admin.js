@@ -500,16 +500,20 @@ function populateForms() {
     if (currentData.about) {
         // Check if new multilingual format
         if (currentData.about.sr || currentData.about.en || currentData.about.ru) {
-            // New format
-            document.getElementById('about-title-sr').value = currentData.about.sr?.title || '';
-            document.getElementById('about-subtitle-sr').value = currentData.about.sr?.subtitle || '';
-            document.getElementById('about-description-sr').value = currentData.about.sr?.description || '';
-            document.getElementById('about-title-en').value = currentData.about.en?.title || '';
-            document.getElementById('about-subtitle-en').value = currentData.about.en?.subtitle || '';
-            document.getElementById('about-description-en').value = currentData.about.en?.description || '';
-            document.getElementById('about-title-ru').value = currentData.about.ru?.title || '';
-            document.getElementById('about-subtitle-ru').value = currentData.about.ru?.subtitle || '';
-            document.getElementById('about-description-ru').value = currentData.about.ru?.description || '';
+            // New format - load all languages immediately
+            const aboutSr = currentData.about.sr || {};
+            const aboutEn = currentData.about.en || {};
+            const aboutRu = currentData.about.ru || {};
+            
+            document.getElementById('about-title-sr').value = aboutSr.title || '';
+            document.getElementById('about-subtitle-sr').value = aboutSr.subtitle || '';
+            document.getElementById('about-description-sr').value = aboutSr.description || '';
+            document.getElementById('about-title-en').value = aboutEn.title || '';
+            document.getElementById('about-subtitle-en').value = aboutEn.subtitle || '';
+            document.getElementById('about-description-en').value = aboutEn.description || '';
+            document.getElementById('about-title-ru').value = aboutRu.title || '';
+            document.getElementById('about-subtitle-ru').value = aboutRu.subtitle || '';
+            document.getElementById('about-description-ru').value = aboutRu.description || '';
         } else {
             // Old format - migrate on display
             document.getElementById('about-title-sr').value = currentData.about.title || '';
@@ -522,9 +526,12 @@ function populateForms() {
             document.getElementById('about-subtitle-ru').value = '';
             document.getElementById('about-description-ru').value = '';
         }
-        document.getElementById('about-experience').value = currentData.about.stats?.experience || '';
-        document.getElementById('about-projects').value = currentData.about.stats?.projects || '';
-        document.getElementById('about-clients').value = currentData.about.stats?.clients || '';
+        
+        // Always load stats (they are language-independent)
+        const stats = currentData.about.stats || {};
+        document.getElementById('about-experience').value = stats.experience || '';
+        document.getElementById('about-projects').value = stats.projects || '';
+        document.getElementById('about-clients').value = stats.clients || '';
     }
 
     // Contact form
