@@ -323,6 +323,10 @@ async function saveData(commitMessage = 'Update content') {
         }
         
         showNotification('Podaci uspešno sačuvani', 'success');
+        
+        // Refresh lists to show updated data
+        renderServices();
+        renderPortfolio();
     } catch (error) {
         console.error('Save data error:', error);
         const errorMsg = error.message || 'Nepoznata greška';
@@ -339,6 +343,9 @@ async function saveData(commitMessage = 'Update content') {
                 if (result && result.sha) {
                     currentSha = result.sha;
                 }
+                // Refresh lists after successful creation
+                renderServices();
+                renderPortfolio();
             } catch (createError) {
                 showNotification('Greška pri kreiranju fajla: ' + createError.message, 'error');
             }
@@ -443,7 +450,9 @@ function deleteService(id) {
     if (!confirm('Da li ste sigurni da želite da obrišete ovu uslugu?')) return;
 
     currentData.services = currentData.services.filter(s => s.id !== id);
-    saveData('Delete service');
+    saveData('Delete service').then(() => {
+        renderServices();
+    });
 }
 
 function addService() {
@@ -506,7 +515,9 @@ function deletePortfolio(id) {
     if (!confirm('Da li ste sigurni da želite da obrišete ovaj projekat?')) return;
 
     currentData.portfolio = currentData.portfolio.filter(p => p.id !== id);
-    saveData('Delete portfolio item');
+    saveData('Delete portfolio item').then(() => {
+        renderPortfolio();
+    });
 }
 
 function addPortfolio() {
