@@ -926,7 +926,146 @@ function openModal(modalId) {
 
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
-    modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// ===== User Management =====
+// Hash password using SHA-256
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function loadUsers() {
+    showLoading(true);
+    try {
+        const result = await getFileContent(USERS_FILE_PATH);
+        if (result && result.content) {
+            currentUsers = result.content;
+            currentUsersSha = result.sha;
+            renderUsers();
+        } else {
+            // File doesn't exist, create it
+            currentUsers = [];
+            try {
+                await createFile(USERS_FILE_PATH, [], 'Initial users file');
+                const newResult = await getFileContent(USERS_FILE_PATH);
+                if (newResult) {
+                    currentUsersSha = newResult.sha;
+                }
+                renderUsers();
+            } catch (createError) {
+                console.error('Error creating users file:', createError);
+                currentUsers = [];
+                renderUsers();
+            }
+        }
+    } catch (error) {
+        console.error('Load users error:', error);
+        currentUsers = [];
+        renderUsers();
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function saveUsers(commitMessage = 'Update users') {
+    showLoading(true);
+    try {
+        let fileInfo = null;
+        let fileExists = false;
+        
+        try {
+            fileInfo = await getFileContent(USERS_FILE_PATH);
+            if (fileInfo && fileInfo.sha) {
+                fileExists = true;
+                currentUsersSha = fileInfo.sha;
+            }
+        } catch (getError) {
+            fileExists = false;
+            currentUsersSha = null;
+        }
+        
+        if (fileExists && currentUsersSha) {
+            await updateFile(USERS_FILE_PATH, currentUsers, currentUsersSha, commitMessage);
+        } else {
+            await updateFile(USERS_FILE_PATH, currentUsers, null, commitMessage);
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        const result = await getFileContent(USERS_FILE_PATH);
+        if (result && result.sha) {
+            currentUsersSha = result.sha;
+        }
+        
+        showNotification('Korisnici uspešno sačuvani', 'success');
+        renderUsers();
+    } catch (error) {
+        console.error('Save users error:', error);
+        showNotification('Greška pri čuvanju korisnika: ' + error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+function renderUsers() {
+    const container = document.getElementById('users-list');
+    if (!container) return;
+    
+    container.innerHTML = '';
+
+    if (!currentUsers || currentUsers.length === 0) {
+        container.innerHTML = '<p class="empty-state">Nema korisnika. Dodajte prvog korisnika.</p>';
+        return;
+    }
+
+    currentUsers.forEach((user) => {
+        const item = document.createElement('div');
+        item.className = 'item-card';
+        item.innerHTML = `
+            <div class="item-card__content">
+                <h3>${user.username}</h3>
+                <p>Korisničko ime: <strong>${user.username}</strong></p>
+            </div>
+            <div class="item-card__actions">
+                <button class="btn btn-small btn-secondary" onclick="editUser('${user.username}')">Izmeni</button>
+                <button class="btn btn-small btn-danger" onclick="deleteUser('${user.username}')">Obriši</button>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+async function editUser(username) {
+    const user = currentUsers.find(u => u.username === username);
+    if (!user) return;
+
+    document.getElementById('user-id').value = username;
+    document.getElementById('user-username').value = user.username;
+    document.getElementById('user-password').value = ''; // Don't show password
+    document.getElementById('user-modal-title').textContent = 'Izmeni korisnika';
+    
+    openModal('user-modal');
+}
+
+async function deleteUser(username) {
+    if (!confirm('Da li ste sigurni da želite da obrišete ovog korisnika?')) return;
+
+    currentUsers = currentUsers.filter(u => u.username !== username);
+    await saveUsers('Delete user');
+}
+
+async function addUser() {
+    document.getElementById('user-form').reset();
+    document.getElementById('user-id').value = '';
+    document.getElementById('user-modal-title').textContent = 'Dodaj korisnika';
+    openModal('user-modal');
 }
 
 // ===== Event Listeners =====
