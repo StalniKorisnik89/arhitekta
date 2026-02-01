@@ -591,9 +591,10 @@ function populateForms() {
         return;
     }
 
-    // Ensure DOM is ready
+    // Ensure DOM is ready - check for hero form first since it's now the default tab
+    const headlineSrEl = document.getElementById('hero-headline-sr');
     const titleSrEl = document.getElementById('about-title-sr');
-    if (!titleSrEl) {
+    if (!headlineSrEl && !titleSrEl) {
         console.warn('populateForms: DOM elements not ready yet, retrying...');
         setTimeout(() => populateForms(), 200);
         return;
@@ -1668,7 +1669,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Image upload handlers
+    // Image upload handlers - Hero background
+    const heroBackgroundImageUpload = document.getElementById('hero-background-image-upload');
+    if (heroBackgroundImageUpload) {
+        heroBackgroundImageUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showNotification('Molimo izaberite sliku (JPG, PNG, GIF, itd.)', 'error');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('Slika je prevelika. Maksimalna veličina je 5MB.', 'error');
+                return;
+            }
+            
+            const statusEl = document.getElementById('hero-background-image-upload-status');
+            const previewEl = document.getElementById('hero-background-image-preview');
+            const previewImgEl = document.getElementById('hero-background-image-preview-img');
+            const inputEl = document.getElementById('hero-background-image');
+            
+            statusEl.textContent = 'Upload-ovanje...';
+            statusEl.className = 'upload-status uploading';
+            
+            try {
+                const imageUrl = await uploadImage(file);
+                inputEl.value = imageUrl;
+                previewImgEl.src = imageUrl;
+                previewEl.style.display = 'block';
+                statusEl.textContent = 'Upload uspešan!';
+                statusEl.className = 'upload-status success';
+                showNotification('Slika uspešno upload-ovana', 'success');
+            } catch (error) {
+                statusEl.textContent = 'Greška pri upload-u';
+                statusEl.className = 'upload-status error';
+                showNotification(error.message || 'Greška pri upload-u slike', 'error');
+                previewEl.style.display = 'none';
+            }
+        });
+    }
+
+    // Image upload handlers - Portfolio
     const portfolioImageUpload = document.getElementById('portfolio-image-upload');
     if (portfolioImageUpload) {
         portfolioImageUpload.addEventListener('change', async (e) => {
