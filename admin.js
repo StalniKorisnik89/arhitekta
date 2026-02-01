@@ -902,7 +902,17 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
-            document.getElementById(`tab-${tabName}`).classList.add('active');
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                
+                // If switching to "about" tab, ensure data is populated
+                if (tabName === 'about' && currentData) {
+                    setTimeout(() => {
+                        populateForms();
+                    }, 50);
+                }
+            }
         });
     });
 
