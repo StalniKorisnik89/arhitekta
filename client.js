@@ -938,9 +938,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                         loadData();
                     });
                 } else {
-                    throw new Error('GitHub config not available');
+                    // User doesn't have token configured - clear saved session
+                    localStorage.removeItem('clientUser');
+                    throw new Error('GitHub token nije konfigurisan za vaš nalog. Molimo kontaktirajte administratora.');
                 }
             } else {
+                // User not found - clear saved session
+                localStorage.removeItem('clientUser');
                 throw new Error('User not found');
             }
         } catch (error) {
