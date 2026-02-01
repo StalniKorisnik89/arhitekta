@@ -798,7 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Language tabs navigation (for About section)
+    // Language tabs navigation (for all forms with language tabs)
     document.querySelectorAll('.lang-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const lang = btn.getAttribute('data-lang');
