@@ -453,16 +453,22 @@ async function saveData(commitMessage = 'Update content') {
         // Wait a bit for GitHub to process the commit
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Reload to get new SHA for next update
-        try {
-            const result = await getFileContent(DATA_FILE_PATH);
-            if (result && result.sha) {
-                currentSha = result.sha;
-                console.log('Updated SHA after save:', currentSha.substring(0, 7) + '...');
+        // Reload to get new SHA for next update (with retries)
+        let reloadAttempts = 3;
+        for (let attempt = 1; attempt <= reloadAttempts; attempt++) {
+            try {
+                const result = await getFileContent(DATA_FILE_PATH);
+                if (result && result.sha) {
+                    currentSha = result.sha;
+                    console.log('Updated SHA after save:', currentSha.substring(0, 7) + '...');
+                    break;
+                }
+            } catch (reloadError) {
+                console.warn(`Reload attempt ${attempt}/${reloadAttempts} failed:`, reloadError);
+                if (attempt < reloadAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
             }
-        } catch (reloadError) {
-            console.warn('Could not reload file after save:', reloadError);
-            // This is not critical, continue
         }
         
         showNotification('Podaci uspešno sačuvani', 'success');
@@ -475,8 +481,8 @@ async function saveData(commitMessage = 'Update content') {
         const errorMsg = error.message || 'Nepoznata greška';
         
         // Handle specific error cases
-        if (errorMsg.includes('409') || errorMsg.includes('does not match') || errorMsg.includes('Conflict')) {
-            showNotification('Fajl je promenjen. Osvežite stranicu i pokušajte ponovo.', 'error');
+        if (errorMsg.includes('409') || errorMsg.includes('does not match') || errorMsg.includes('Conflict') || errorMsg.includes('promenjen na serveru')) {
+            showNotification('Fajl je promenjen na serveru. Osvežite stranicu i pokušajte ponovo.', 'error');
         } else if (errorMsg.includes('404') || errorMsg.includes('nije pronađen')) {
             showNotification('Fajl nije pronađen. Pokušavam da kreiram novi fajl...', 'error');
             // Try to create file without SHA
