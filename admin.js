@@ -942,6 +942,12 @@ async function hashPassword(password) {
 }
 
 async function loadUsers() {
+    // Check if githubConfig is set
+    if (!githubConfig || !githubConfig.token) {
+        console.warn('Cannot load users: githubConfig not set');
+        return;
+    }
+    
     showLoading(true);
     try {
         const result = await getFileContent(USERS_FILE_PATH);
