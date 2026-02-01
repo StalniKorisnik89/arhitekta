@@ -532,10 +532,17 @@ function getInitialData() {
 
 // ===== Form Population =====
 function populateForms() {
-    if (!currentData) return;
+    if (!currentData) {
+        console.warn('populateForms: currentData is null');
+        return;
+    }
+
+    console.log('Populating forms with data:', currentData);
 
     // About form - support both old and new format
     if (currentData.about) {
+        console.log('Loading about data:', currentData.about);
+        
         // Check if new multilingual format
         if (currentData.about.sr || currentData.about.en || currentData.about.ru) {
             // New format - load all languages immediately
@@ -543,33 +550,79 @@ function populateForms() {
             const aboutEn = currentData.about.en || {};
             const aboutRu = currentData.about.ru || {};
             
-            document.getElementById('about-title-sr').value = aboutSr.title || '';
-            document.getElementById('about-subtitle-sr').value = aboutSr.subtitle || '';
-            document.getElementById('about-description-sr').value = aboutSr.description || '';
-            document.getElementById('about-title-en').value = aboutEn.title || '';
-            document.getElementById('about-subtitle-en').value = aboutEn.subtitle || '';
-            document.getElementById('about-description-en').value = aboutEn.description || '';
-            document.getElementById('about-title-ru').value = aboutRu.title || '';
-            document.getElementById('about-subtitle-ru').value = aboutRu.subtitle || '';
-            document.getElementById('about-description-ru').value = aboutRu.description || '';
+            console.log('Loading multilingual format:', { sr: aboutSr, en: aboutEn, ru: aboutRu });
+            
+            const titleSrEl = document.getElementById('about-title-sr');
+            const subtitleSrEl = document.getElementById('about-subtitle-sr');
+            const descSrEl = document.getElementById('about-description-sr');
+            const titleEnEl = document.getElementById('about-title-en');
+            const subtitleEnEl = document.getElementById('about-subtitle-en');
+            const descEnEl = document.getElementById('about-description-en');
+            const titleRuEl = document.getElementById('about-title-ru');
+            const subtitleRuEl = document.getElementById('about-subtitle-ru');
+            const descRuEl = document.getElementById('about-description-ru');
+            
+            if (titleSrEl) titleSrEl.value = aboutSr.title || '';
+            if (subtitleSrEl) subtitleSrEl.value = aboutSr.subtitle || '';
+            if (descSrEl) descSrEl.value = aboutSr.description || '';
+            if (titleEnEl) titleEnEl.value = aboutEn.title || '';
+            if (subtitleEnEl) subtitleEnEl.value = aboutEn.subtitle || '';
+            if (descEnEl) descEnEl.value = aboutEn.description || '';
+            if (titleRuEl) titleRuEl.value = aboutRu.title || '';
+            if (subtitleRuEl) subtitleRuEl.value = aboutRu.subtitle || '';
+            if (descRuEl) descRuEl.value = aboutRu.description || '';
         } else {
             // Old format - migrate on display
-            document.getElementById('about-title-sr').value = currentData.about.title || '';
-            document.getElementById('about-subtitle-sr').value = currentData.about.subtitle || '';
-            document.getElementById('about-description-sr').value = currentData.about.description || '';
-            document.getElementById('about-title-en').value = '';
-            document.getElementById('about-subtitle-en').value = '';
-            document.getElementById('about-description-en').value = '';
-            document.getElementById('about-title-ru').value = '';
-            document.getElementById('about-subtitle-ru').value = '';
-            document.getElementById('about-description-ru').value = '';
+            console.log('Loading old format, migrating...');
+            const titleSrEl = document.getElementById('about-title-sr');
+            const subtitleSrEl = document.getElementById('about-subtitle-sr');
+            const descSrEl = document.getElementById('about-description-sr');
+            const titleEnEl = document.getElementById('about-title-en');
+            const subtitleEnEl = document.getElementById('about-subtitle-en');
+            const descEnEl = document.getElementById('about-description-en');
+            const titleRuEl = document.getElementById('about-title-ru');
+            const subtitleRuEl = document.getElementById('about-subtitle-ru');
+            const descRuEl = document.getElementById('about-description-ru');
+            
+            if (titleSrEl) titleSrEl.value = currentData.about.title || '';
+            if (subtitleSrEl) subtitleSrEl.value = currentData.about.subtitle || '';
+            if (descSrEl) descSrEl.value = currentData.about.description || '';
+            if (titleEnEl) titleEnEl.value = '';
+            if (subtitleEnEl) subtitleEnEl.value = '';
+            if (descEnEl) descEnEl.value = '';
+            if (titleRuEl) titleRuEl.value = '';
+            if (subtitleRuEl) subtitleRuEl.value = '';
+            if (descRuEl) descRuEl.value = '';
         }
         
         // Always load stats (they are language-independent)
         const stats = currentData.about.stats || {};
-        document.getElementById('about-experience').value = stats.experience || '';
-        document.getElementById('about-projects').value = stats.projects || '';
-        document.getElementById('about-clients').value = stats.clients || '';
+        console.log('Loading stats:', stats);
+        
+        const expEl = document.getElementById('about-experience');
+        const projEl = document.getElementById('about-projects');
+        const clientsEl = document.getElementById('about-clients');
+        
+        if (expEl) {
+            expEl.value = stats.experience || '';
+            console.log('Set experience to:', stats.experience);
+        } else {
+            console.error('about-experience element not found!');
+        }
+        if (projEl) {
+            projEl.value = stats.projects || '';
+            console.log('Set projects to:', stats.projects);
+        } else {
+            console.error('about-projects element not found!');
+        }
+        if (clientsEl) {
+            clientsEl.value = stats.clients || '';
+            console.log('Set clients to:', stats.clients);
+        } else {
+            console.error('about-clients element not found!');
+        }
+    } else {
+        console.warn('No about data found in currentData');
     }
 
     // Contact form
