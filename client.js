@@ -825,7 +825,7 @@ function closeModal(modalId) {
 }
 
 // ===== Event Listeners =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Check if already logged in
     const savedUser = localStorage.getItem('clientUser');
     
