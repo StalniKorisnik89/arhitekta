@@ -77,7 +77,10 @@
       "email": "Email",
       "phone": "Telefon",
       "message": "Poruka",
-      "send": "Pošalji"
+      "send": "Pošalji",
+      "sending": "Šalje se...",
+      "success": "Poruka je pripremljena! Proverite vaš email klijent.",
+      "error": "Greška pri slanju poruke. Molimo pokušajte ponovo."
     },
     "info": {
       "phone": "Telefon",

@@ -282,7 +282,8 @@
                             <textarea id="message" name="message" class="form-input form-textarea" rows="5" required data-i18n-placeholder="contact.form.message"></textarea>
                             <label for="message" class="form-label" data-i18n="contact.form.message">Poruka</label>
                         </div>
-                        <button type="submit" class="btn btn--primary btn--full" data-i18n="contact.form.send">Pošalji</button>
+                        <div id="form-message" class="form-message" style="display: none;"></div>
+                        <button type="submit" class="btn btn--primary btn--full" id="submit-btn" data-i18n="contact.form.send">Pošalji</button>
                     </form>
                 </div>
                 
@@ -295,7 +296,7 @@
                         </div>
                         <div class="contact-info-item__content">
                             <h4 data-i18n="contact.info.phone">Telefon</h4>
-                            <p>+381 11 123 4567</p>
+                            <p><a href="#" id="contact-phone-link" class="contact-link">+381 11 123 4567</a></p>
                         </div>
                     </div>
                     
@@ -308,7 +309,7 @@
                         </div>
                         <div class="contact-info-item__content">
                             <h4 data-i18n="contact.info.email">Email</h4>
-                            <p>info@studio.rs</p>
+                            <p><a href="#" id="contact-email-link" class="contact-link">info@studio.rs</a></p>
                         </div>
                     </div>
                     

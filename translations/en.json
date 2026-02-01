@@ -77,7 +77,10 @@
       "email": "Email",
       "phone": "Phone",
       "message": "Message",
-      "send": "Send"
+      "send": "Send",
+      "sending": "Sending...",
+      "success": "Message is ready! Please check your email client.",
+      "error": "Error sending message. Please try again."
     },
     "info": {
       "phone": "Phone",

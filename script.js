@@ -239,6 +239,34 @@ if (document.readyState === 'loading') {
 }
 
 // ===== Contact Form Handling =====
+let contactEmail = 'info@studio.rs'; // Default email, will be updated from data/content.json
+
+function updateContactLinks() {
+    // Get contact info from page
+    const phoneElement = document.getElementById('contact-phone-link');
+    const emailElement = document.getElementById('contact-email-link');
+    
+    if (phoneElement) {
+        const phone = phoneElement.textContent.trim();
+        phoneElement.href = `tel:${phone}`;
+    }
+    
+    if (emailElement) {
+        const email = emailElement.textContent.trim();
+        contactEmail = email;
+        emailElement.href = `mailto:${email}`;
+    }
+}
+
+// Update contact links when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(updateContactLinks, 500);
+    });
+} else {
+    setTimeout(updateContactLinks, 500);
+}
+
 const contactForm = document.getElementById('contact-form');
 
 if (contactForm) {
@@ -249,25 +277,82 @@ if (contactForm) {
         const formData = new FormData(contactForm);
         const data = Object.fromEntries(formData);
         
-        // Here you would typically send the data to a server
-        console.log('Form submitted:', data);
+        // Get email from contact info (updated from admin)
+        const emailLink = document.getElementById('contact-email-link');
+        const recipientEmail = emailLink ? emailLink.textContent.trim() : contactEmail;
         
-        // Show success message (you can customize this)
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        // Validate form
+        if (!data.name || !data.email || !data.message) {
+            showFormMessage('Molimo popunite sva obavezna polja.', 'error');
+            return;
+        }
+        
+        // Create mailto link with subject and body
+        const subject = encodeURIComponent(`Kontakt forma: ${data.name}`);
+        const body = encodeURIComponent(
+            `Ime: ${data.name}\n` +
+            `Email: ${data.email}\n` +
+            (data.phone ? `Telefon: ${data.phone}\n` : '') +
+            `\nPoruka:\n${data.message}`
+        );
+        
+        const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+        
+        // Show loading state
+        const submitBtn = document.getElementById('submit-btn');
         const originalText = submitBtn.textContent;
-        submitBtn.textContent = getNestedValue(translations, 'contact.form.send') + ' ✓';
-        submitBtn.style.backgroundColor = '#4CAF50';
+        submitBtn.disabled = true;
+        submitBtn.textContent = getNestedValue(translations, 'contact.form.sending') || 'Šalje se...';
         
-        // Reset form
-        contactForm.reset();
-        
-        // Reset button after 3 seconds
-        setTimeout(() => {
+        // Open email client
+        try {
+            window.location.href = mailtoLink;
+            
+            // Show success message
+            showFormMessage(
+                getNestedValue(translations, 'contact.form.success') || 'Poruka je pripremljena! Proverite vaš email klijent.',
+                'success'
+            );
+            
+            // Reset form
+            contactForm.reset();
+            
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 3000);
+        } catch (error) {
+            console.error('Error opening email client:', error);
+            showFormMessage(
+                getNestedValue(translations, 'contact.form.error') || 'Greška pri slanju poruke. Molimo pokušajte ponovo.',
+                'error'
+            );
             submitBtn.textContent = originalText;
-            submitBtn.style.backgroundColor = '';
-        }, 3000);
+            submitBtn.disabled = false;
+        }
     });
 }
+
+function showFormMessage(message, type = 'success') {
+    const messageDiv = document.getElementById('form-message');
+    if (messageDiv) {
+        messageDiv.textContent = message;
+        messageDiv.className = `form-message ${type}`;
+        messageDiv.style.display = 'block';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000);
+    }
+}
+
+// Export function to update email from data loader
+window.updateContactEmail = function(email) {
+    contactEmail = email;
+    updateContactLinks();
+};
 
 // ===== Portfolio Item Click Handler =====
 document.querySelectorAll('.portfolio-item').forEach(item => {

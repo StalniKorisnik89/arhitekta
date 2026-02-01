@@ -115,16 +115,22 @@ function applyContentToPage() {
         if (contactSection) {
             const contactInfoItems = contactSection.querySelectorAll('.contact-info-item');
             if (contactInfoItems.length >= 3) {
-                const contactPhone = contactInfoItems[0].querySelector('p');
-                const contactEmail = contactInfoItems[1].querySelector('p');
+                const contactPhoneLink = document.getElementById('contact-phone-link');
+                const contactEmailLink = document.getElementById('contact-email-link');
                 const contactAddress = contactInfoItems[2].querySelector('p');
                 
-                if (contactPhone) {
-                    contactPhone.textContent = siteContent.contact.phone;
+                if (contactPhoneLink) {
+                    contactPhoneLink.textContent = siteContent.contact.phone;
+                    contactPhoneLink.href = `tel:${siteContent.contact.phone}`;
                     console.log('✓ Updated contact phone');
                 }
-                if (contactEmail) {
-                    contactEmail.textContent = siteContent.contact.email;
+                if (contactEmailLink) {
+                    contactEmailLink.textContent = siteContent.contact.email;
+                    contactEmailLink.href = `mailto:${siteContent.contact.email}`;
+                    // Update email for form submission
+                    if (window.updateContactEmail) {
+                        window.updateContactEmail(siteContent.contact.email);
+                    }
                     console.log('✓ Updated contact email');
                 }
                 if (contactAddress) {
