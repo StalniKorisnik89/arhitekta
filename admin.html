@@ -394,8 +394,13 @@
                 </div>
                 <div class="form-group">
                     <label for="user-password">Lozinka</label>
-                    <input type="password" id="user-password" name="password" required>
-                    <small>Lozinka će biti sačuvana u hash formatu</small>
+                    <div style="position: relative;">
+                        <input type="password" id="user-password" name="password" required>
+                        <button type="button" id="toggle-password" class="btn-toggle-password" onclick="togglePasswordVisibility()" title="Prikaži/Sakrij lozinku">
+                            👁️
+                        </button>
+                    </div>
+                    <small id="password-hint">Lozinka će biti sačuvana u hash formatu</small>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary modal-close">Otkaži</button>

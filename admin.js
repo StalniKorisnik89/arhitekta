@@ -1055,7 +1055,13 @@ async function editUser(username) {
     document.getElementById('user-id').value = username;
     document.getElementById('user-username').value = user.username;
     document.getElementById('user-password').value = ''; // Don't show password
+    document.getElementById('user-password').required = false; // Password not required when editing
+    document.getElementById('user-password').placeholder = 'Ostavite prazno da zadržite postojeću lozinku';
+    document.getElementById('password-hint').textContent = 'Ostavite prazno da zadržite postojeću lozinku ili unesite novu lozinku';
     document.getElementById('user-modal-title').textContent = 'Izmeni korisnika';
+    
+    // Store original password hash for comparison
+    document.getElementById('user-password').dataset.originalHash = user.passwordHash;
     
     openModal('user-modal');
 }
@@ -1070,8 +1076,37 @@ async function deleteUser(username) {
 async function addUser() {
     document.getElementById('user-form').reset();
     document.getElementById('user-id').value = '';
+    document.getElementById('user-password').required = true;
+    document.getElementById('user-password').placeholder = '';
+    document.getElementById('user-password').removeAttribute('data-original-hash');
+    document.getElementById('password-hint').textContent = 'Lozinka će biti sačuvana u hash formatu';
     document.getElementById('user-modal-title').textContent = 'Dodaj korisnika';
+    
+    // Reset password visibility
+    const passwordInput = document.getElementById('user-password');
+    passwordInput.type = 'password';
+    const toggleBtn = document.getElementById('toggle-password');
+    if (toggleBtn) {
+        toggleBtn.textContent = '👁️';
+        toggleBtn.title = 'Prikaži lozinku';
+    }
+    
     openModal('user-modal');
+}
+
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('user-password');
+    const toggleBtn = document.getElementById('toggle-password');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.textContent = '🙈';
+        toggleBtn.title = 'Sakrij lozinku';
+    } else {
+        passwordInput.type = 'password';
+        toggleBtn.textContent = '👁️';
+        toggleBtn.title = 'Prikaži lozinku';
+    }
 }
 
 // ===== Event Listeners =====
@@ -1437,12 +1472,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = formData.get('password');
             const id = formData.get('id');
 
-            if (!username || !password) {
-                showNotification('Molimo unesite korisničko ime i lozinku', 'error');
+            if (!username) {
+                showNotification('Molimo unesite korisničko ime', 'error');
                 return;
             }
 
-            const passwordHash = await hashPassword(password);
+            if (!id && !password) {
+                // New user - password is required
+                showNotification('Molimo unesite lozinku', 'error');
+                return;
+            }
+
+            let passwordHash;
+            if (id) {
+                // Editing existing user
+                if (password && password.trim() !== '') {
+                    // New password provided
+                    passwordHash = await hashPassword(password);
+                } else {
+                    // Keep existing password - get it from the user data
+                    const existingUser = currentUsers.find(u => u.username === id);
+                    if (existingUser) {
+                        passwordHash = existingUser.passwordHash;
+                    } else {
+                        showNotification('Korisnik nije pronađen', 'error');
+                        return;
+                    }
+                }
+            } else {
+                // New user - password is required
+                passwordHash = await hashPassword(password);
+            }
+
             const user = {
                 username: username,
                 passwordHash: passwordHash

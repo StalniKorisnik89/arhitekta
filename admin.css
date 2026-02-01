@@ -289,6 +289,34 @@ body {
     min-height: 100px;
 }
 
+.form-group input[type="password"],
+.form-group input[type="text"] {
+    padding-right: 45px;
+}
+
+.btn-toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px 10px;
+    color: #666;
+    transition: color 0.3s;
+    z-index: 10;
+}
+
+.btn-toggle-password:hover {
+    color: #333;
+}
+
+.form-group > div[style*="position: relative"] {
+    position: relative;
+}
+
 .form-group small {
     display: block;
     margin-top: 5px;
