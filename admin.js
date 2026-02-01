@@ -961,6 +961,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }, 600);
             });
+            
+            // Load users
+            loadUsers();
         } catch (error) {
             console.error('Error loading saved config:', error);
             localStorage.removeItem('githubConfig');
