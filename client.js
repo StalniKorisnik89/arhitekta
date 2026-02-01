@@ -361,23 +361,35 @@ function getInitialData() {
                 ctaPortfolio: "Portfolio"
             },
             en: {
-                headline: "",
-                subtitle: "",
-                ctaContact: "",
-                ctaPortfolio: ""
+                headline: "Architecture that brings space to life",
+                subtitle: "We create functional and aesthetically exceptional spaces that reflect your vision and needs",
+                ctaContact: "Contact us",
+                ctaPortfolio: "Portfolio"
             },
             ru: {
-                headline: "",
-                subtitle: "",
-                ctaContact: "",
-                ctaPortfolio: ""
+                headline: "Архитектура, которая оживляет пространство",
+                subtitle: "Мы создаем функциональные и эстетически исключительные пространства, отражающие ваше видение и потребности",
+                ctaContact: "Свяжитесь с нами",
+                ctaPortfolio: "Портфолио"
             },
             backgroundImage: ""
         },
         about: {
-            title: "O nama",
-            subtitle: "Studio za arhitekturu i dizajn enterijera",
-            description: "",
+            sr: {
+                title: "O nama",
+                subtitle: "Studio za arhitekturu i dizajn enterijera",
+                description: "Sa više od 15 godina iskustva u arhitektonskom projektovanju i dizajnu enterijera, naš studio kombinuje funkcionalnost, estetiku i inovativne materijale kako bismo kreirali prostore koji nadmašuju očekivanja. Svaki projekat je jedinstvena priča koja nastaje kroz pažljivo slušanje klijentovih potreba i transformaciju ideja u konkretne, živuće prostore."
+            },
+            en: {
+                title: "About Us",
+                subtitle: "Architecture and Interior Design Studio",
+                description: "With over 15 years of experience in architectural design and interior design, our studio combines functionality, aesthetics and innovative materials to create spaces that exceed expectations. Each project is a unique story that emerges through careful listening to client needs and transforming ideas into concrete, living spaces."
+            },
+            ru: {
+                title: "О нас",
+                subtitle: "Студия архитектуры и дизайна интерьеров",
+                description: "Имея более 15 лет опыта в архитектурном проектировании и дизайне интерьеров, наша студия сочетает функциональность, эстетику и инновационные материалы для создания пространств, превосходящих ожидания. Каждый проект - это уникальная история, которая возникает благодаря внимательному прислушиванию к потребностям клиентов и превращению идей в конкретные, живые пространства."
+            },
             stats: {
                 experience: "15+",
                 projects: "200+",
