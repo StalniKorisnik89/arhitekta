@@ -15,6 +15,11 @@ let currentUsersSha = null;
 // Detect default branch from repository
 async function detectDefaultBranch() {
     try {
+        // First verify token by checking user info
+        const userInfo = await githubRequest('/user');
+        console.log('Token verified for user:', userInfo.login);
+        
+        // Then get repo info
         const repoInfo = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
         if (repoInfo && repoInfo.default_branch) {
             DEFAULT_BRANCH = repoInfo.default_branch;
@@ -22,7 +27,9 @@ async function detectDefaultBranch() {
             return DEFAULT_BRANCH;
         }
     } catch (error) {
-        console.warn('Could not detect default branch, using "main":', error);
+        console.error('Error detecting default branch:', error);
+        // Re-throw to show proper error message
+        throw error;
     }
     return DEFAULT_BRANCH;
 }
@@ -78,7 +85,12 @@ async function githubRequest(endpoint, options = {}) {
                 if (response.status === 404) {
                     errorMessage = 'Fajl nije pronađen. Proverite putanju i da li fajl postoji u repozitorijumu.';
                 } else if (response.status === 401) {
-                    errorMessage = 'Neautorizovan pristup. Proverite da li je token ispravan i ima dozvole.';
+                    errorMessage = 'Neautorizovan pristup. Proverite:\n' +
+                        '1. Da li je token ispravno kopiran (bez razmaka)\n' +
+                        '2. Da li token ima "repo" dozvolu\n' +
+                        '3. Da li je token istekao (proverite na GitHub Settings)\n' +
+                        '4. Da li je token obrisan\n' +
+                        '5. Pokušajte da kreirate novi token';
                 } else if (response.status === 403) {
                     errorMessage = 'Zabranjen pristup. Proverite dozvole tokena (potrebna "repo" dozvola).';
                 } else if (response.status === 409) {
