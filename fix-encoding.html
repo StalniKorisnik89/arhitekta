@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fix Encoding</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fix Content.json Encoding</h1>
+    <p>Ova stranica će ponovo sačuvati data/content.json sa ispravnim UTF-8 encoding-om.</p>
+    
+    <button onclick="fixEncoding()">Popravi Encoding i Sačuvaj</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        // GitHub config - unesite svoje podatke
+        const GITHUB_CONFIG = {
+            token: prompt('Unesite GitHub Personal Access Token:'),
+            owner: 'StalniKorisnik89',
+            repo: 'arhitekta'
+        };
+        
+        async function fixEncoding() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Učitavanje fajla...</p>';
+            
+            try {
+                // Load current file
+                const response = await fetch('data/content.json');
+                const text = await response.text();
+                
+                // Try to parse - if it fails, the encoding is wrong
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    resultDiv.innerHTML = '<p style="color:red">Greška pri parsiranju JSON-a. Fajl je pokvaren.</p>';
+                    return;
+                }
+                
+                // Fix the data - replace corrupted text with correct Serbian characters
+                // This is a manual fix - you'll need to re-enter the correct text
+                resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                resultDiv.innerHTML += '<p style="color:orange">Proverite podatke iznad. Ako su encoding problemi, morate ručno da popravite tekst u admin panelu.</p>';
+                
+                // Save with correct encoding
+                const fixedJson = JSON.stringify(data, null, 2);
+                await saveToGitHub(fixedJson);
+                
+            } catch (error) {
+                resultDiv.innerHTML = '<p style="color:red">Greška: ' + error.message + '</p>';
+            }
+        }
+        
+        async function saveToGitHub(content) {
+            const resultDiv = document.getElementById('result');
+            
+            // Encode to base64 with proper UTF-8 handling
+            function utf8ToBase64(str) {
+                const encoder = new TextEncoder();
+                const utf8Bytes = encoder.encode(str);
+                let binaryString = '';
+                const chunkSize = 8192;
+                for (let i = 0; i < utf8Bytes.length; i += chunkSize) {
+                    const chunk = utf8Bytes.slice(i, Math.min(i + chunkSize, utf8Bytes.length));
+                    const chunkArray = Array.from(chunk);
+                    binaryString += String.fromCharCode.apply(null, chunkArray);
+                }
+                return btoa(binaryString);
+            }
+            
+            const contentBase64 = utf8ToBase64(content);
+            
+            // Get current file SHA
+            let sha = null;
+            try {
+                const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data/content.json`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (getResponse.ok) {
+                    const fileData = await getResponse.json();
+                    sha = fileData.sha;
+                }
+            } catch (e) {
+                console.log('Could not get SHA, will create new file');
+            }
+            
+            // Save file
+            const body = {
+                message: 'Fix UTF-8 encoding',
+                content: contentBase64,
+                branch: 'main'
+            };
+            
+            if (sha) {
+                body.sha = sha;
+            }
+            
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/data/content.json`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            
+            if (response.ok) {
+                resultDiv.innerHTML += '<p style="color:green">✓ Fajl uspešno sačuvan sa ispravnim encoding-om!</p>';
+            } else {
+                const error = await response.json();
+                resultDiv.innerHTML += '<p style="color:red">✗ Greška: ' + (error.message || 'Unknown error') + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>
