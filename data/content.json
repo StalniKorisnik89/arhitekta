@@ -12,8 +12,18 @@
   "services": [
     {
       "id": 1,
-      "title": "Arhitektonsko projektovanje",
-      "description": "Kompletan arhitektonski projekat od konceptualne faze do izvedbe, uključujući tehničku dokumentaciju i nadzor radova."
+      "sr": {
+        "title": "Arhitektonsko projektovanje",
+        "description": "Kompletan arhitektonski projekat od konceptualne faze do izvedbe, uključujući tehničku dokumentaciju i nadzor radova."
+      },
+      "en": {
+        "title": "engleski",
+        "description": "Kompletan arhitektonski projekat od konceptualne faze do izvedbe, uključujući tehničku dokumentaciju i nadzor radova."
+      },
+      "ru": {
+        "title": "ruski",
+        "description": "Kompletan arhitektonski projekat od konceptualne faze do izvedbe, uključujući tehničku dokumentaciju i nadzor radova."
+      }
     },
     {
       "id": 2,
