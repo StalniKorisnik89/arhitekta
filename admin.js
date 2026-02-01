@@ -1101,8 +1101,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 600);
             });
             
-            // Load users
-            loadUsers();
+            // Load users (only if githubConfig is set)
+            if (githubConfig && githubConfig.token) {
+                loadUsers();
+            }
         } catch (error) {
             console.error('Error loading saved config:', error);
             localStorage.removeItem('githubConfig');
