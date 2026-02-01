@@ -402,6 +402,21 @@
                     </div>
                     <small id="password-hint">Lozinka će biti sačuvana u hash formatu</small>
                 </div>
+                <div class="form-group">
+                    <label for="user-github-token">GitHub Personal Access Token (opciono)</label>
+                    <input type="password" id="user-github-token" name="github-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                    <small>Ostavite prazno da koristi glavni admin token. Ako unesete, korisnik će koristiti svoj token.</small>
+                </div>
+                <div class="form-group">
+                    <label for="user-repo-owner">Repo Owner (opciono)</label>
+                    <input type="text" id="user-repo-owner" name="repo-owner" placeholder="username">
+                    <small>Ostavite prazno da koristi glavni admin repo owner.</small>
+                </div>
+                <div class="form-group">
+                    <label for="user-repo-name">Repo Name (opciono)</label>
+                    <input type="text" id="user-repo-name" name="repo-name" placeholder="arhitekta">
+                    <small>Ostavite prazno da koristi glavni admin repo name.</small>
+                </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary modal-close">Otkaži</button>
                     <button type="submit" class="btn btn-primary">Sačuvaj</button>

@@ -1034,10 +1034,12 @@ function renderUsers() {
     currentUsers.forEach((user) => {
         const item = document.createElement('div');
         item.className = 'item-card';
+        const hasCustomToken = user.githubToken ? 'Da' : 'Ne (koristi admin token)';
         item.innerHTML = `
             <div class="item-card__content">
                 <h3>${user.username}</h3>
                 <p>Korisničko ime: <strong>${user.username}</strong></p>
+                <p style="font-size: 0.9rem; color: #666;">GitHub Token: ${hasCustomToken}</p>
             </div>
             <div class="item-card__actions">
                 <button class="btn btn-small btn-secondary" onclick="editUser('${user.username}')">Izmeni</button>
@@ -1470,6 +1472,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(e.target);
             const username = formData.get('username');
             const password = formData.get('password');
+            const githubToken = formData.get('github-token');
+            const repoOwner = formData.get('repo-owner');
+            const repoName = formData.get('repo-name');
             const id = formData.get('id');
 
             if (!username) {
@@ -1508,6 +1513,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: username,
                 passwordHash: passwordHash
             };
+            
+            // Add GitHub config if provided
+            if (githubToken && githubToken.trim() !== '') {
+                user.githubToken = githubToken.trim();
+            }
+            if (repoOwner && repoOwner.trim() !== '') {
+                user.repoOwner = repoOwner.trim();
+            }
+            if (repoName && repoName.trim() !== '') {
+                user.repoName = repoName.trim();
+            }
 
             if (id) {
                 // Update existing user

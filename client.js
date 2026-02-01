@@ -13,6 +13,7 @@ let DEFAULT_BRANCH = 'main';
 
 // ===== Client Authentication =====
 let currentUser = null;
+let currentUserData = null; // Full user object from users.json
 let currentData = null;
 let currentSha = null;
 
@@ -804,29 +805,38 @@ function closeModal(modalId) {
 document.addEventListener('DOMContentLoaded', () => {
     // Check if already logged in
     const savedUser = localStorage.getItem('clientUser');
-    const savedConfig = localStorage.getItem('githubConfig');
     
-    if (savedUser && savedConfig) {
+    if (savedUser) {
         try {
             currentUser = JSON.parse(savedUser);
-            githubConfig = JSON.parse(savedConfig);
             
-            // Check if githubConfig is valid
-            if (!githubConfig.token || !githubConfig.owner || !githubConfig.repo) {
-                throw new Error('GitHub config not valid');
+            // Reload user data from users.json to get latest GitHub config
+            const users = await loadUsers();
+            const user = users.find(u => u.username === currentUser.username);
+            
+            if (user) {
+                const userGitHubConfig = getUserGitHubConfig(user);
+                
+                if (userGitHubConfig && userGitHubConfig.token) {
+                    githubConfig = userGitHubConfig;
+                    currentUserData = user;
+                    
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('client-dashboard').style.display = 'flex';
+                    document.getElementById('client-info').textContent = `${currentUser.username} - ${githubConfig.owner}/${githubConfig.repo}`;
+                    
+                    detectDefaultBranch().then(() => {
+                        loadData();
+                    });
+                } else {
+                    throw new Error('GitHub config not available');
+                }
+            } else {
+                throw new Error('User not found');
             }
-            
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('client-dashboard').style.display = 'flex';
-            document.getElementById('client-info').textContent = `${currentUser.username} - ${githubConfig.owner}/${githubConfig.repo}`;
-            
-            detectDefaultBranch().then(() => {
-                loadData();
-            });
         } catch (error) {
             console.error('Error loading saved user/config:', error);
             localStorage.removeItem('clientUser');
-            localStorage.removeItem('githubConfig');
         }
     }
 
