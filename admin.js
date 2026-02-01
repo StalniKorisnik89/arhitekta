@@ -78,6 +78,8 @@ async function githubRequest(endpoint, options = {}) {
                     errorMessage = 'Neautorizovan pristup. Proverite da li je token ispravan i ima dozvole.';
                 } else if (response.status === 403) {
                     errorMessage = 'Zabranjen pristup. Proverite dozvole tokena (potrebna "repo" dozvola).';
+                } else if (response.status === 409) {
+                    errorMessage = errorData.message || '409 Conflict - Fajl je promenjen. Pokušavam ponovo sa najnovijim SHA.';
                 }
             } catch (e) {
                 // If error response is not JSON, use status text
@@ -196,8 +198,42 @@ async function updateFile(path, content, sha, message = 'Update content') {
         return true;
     } catch (error) {
         console.error('Error updating file:', error);
+        
+        // Handle 409 Conflict (SHA mismatch) - file was modified by another process
+        if (error.message && (error.message.includes('409') || error.message.includes('does not match') || error.message.includes('Conflict'))) {
+            console.log('SHA mismatch detected (409 Conflict). File was modified. Retrying with fresh SHA...');
+            // Get fresh SHA and retry
+            try {
+                const freshFileInfo = await getFileContent(path);
+                if (freshFileInfo && freshFileInfo.sha) {
+                    const freshSha = freshFileInfo.sha;
+                    console.log('Retrying with fresh SHA:', freshSha.substring(0, 7) + '...');
+                    
+                    // Retry with fresh SHA
+                    const retryBody = {
+                        message: message,
+                        content: contentBase64,
+                        branch: DEFAULT_BRANCH,
+                        sha: freshSha
+                    };
+                    
+                    const retryResponse = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(retryBody)
+                    });
+                    
+                    console.log('Retry successful with fresh SHA');
+                    return true;
+                } else {
+                    throw new Error('Ne mogu da dobavim najnoviji SHA fajla. Pokušajte ponovo.');
+                }
+            } catch (retryError) {
+                console.error('Retry with fresh SHA failed:', retryError);
+                throw new Error('Fajl je promenjen na serveru. Osvežite stranicu i pokušajte ponovo.');
+            }
+        }
+        
         // If error is 404, it means file doesn't exist
-        // If we had SHA, it might be outdated, try without SHA
         if (error.message && (error.message.includes('404') || error.message.includes('nije pronađen'))) {
             if (sha) {
                 console.log('File not found with provided SHA, trying to create new file without SHA...');
@@ -281,7 +317,7 @@ async function loadData() {
 async function saveData(commitMessage = 'Update content') {
     showLoading(true);
     try {
-        // Always check current file state first
+        // Always get the latest file state first to ensure we have the most recent SHA
         let fileInfo = null;
         let fileExists = false;
         
@@ -290,7 +326,7 @@ async function saveData(commitMessage = 'Update content') {
             if (fileInfo && fileInfo.sha) {
                 fileExists = true;
                 currentSha = fileInfo.sha;
-                console.log('File exists with SHA:', currentSha);
+                console.log('Latest file SHA retrieved:', currentSha.substring(0, 7) + '...');
             }
         } catch (getError) {
             console.log('File does not exist or error getting file:', getError);
@@ -300,7 +336,7 @@ async function saveData(commitMessage = 'Update content') {
         
         // Update or create file based on existence
         if (fileExists && currentSha) {
-            console.log('Updating existing file with SHA:', currentSha);
+            console.log('Updating existing file with SHA:', currentSha.substring(0, 7) + '...');
             await updateFile(DATA_FILE_PATH, currentData, currentSha, commitMessage);
         } else {
             console.log('Creating new file (no SHA)');
@@ -315,7 +351,7 @@ async function saveData(commitMessage = 'Update content') {
             const result = await getFileContent(DATA_FILE_PATH);
             if (result && result.sha) {
                 currentSha = result.sha;
-                console.log('Updated SHA after save:', currentSha);
+                console.log('Updated SHA after save:', currentSha.substring(0, 7) + '...');
             }
         } catch (reloadError) {
             console.warn('Could not reload file after save:', reloadError);
@@ -331,8 +367,10 @@ async function saveData(commitMessage = 'Update content') {
         console.error('Save data error:', error);
         const errorMsg = error.message || 'Nepoznata greška';
         
-        // More helpful error message
-        if (errorMsg.includes('404') || errorMsg.includes('nije pronađen')) {
+        // Handle specific error cases
+        if (errorMsg.includes('409') || errorMsg.includes('does not match') || errorMsg.includes('Conflict')) {
+            showNotification('Fajl je promenjen. Osvežite stranicu i pokušajte ponovo.', 'error');
+        } else if (errorMsg.includes('404') || errorMsg.includes('nije pronađen')) {
             showNotification('Fajl nije pronađen. Pokušavam da kreiram novi fajl...', 'error');
             // Try to create file without SHA
             try {
