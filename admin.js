@@ -1029,6 +1029,60 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('add-service-btn').addEventListener('click', addService);
     document.getElementById('add-portfolio-btn').addEventListener('click', addPortfolio);
 
+    // Image upload handlers
+    const portfolioImageUpload = document.getElementById('portfolio-image-upload');
+    if (portfolioImageUpload) {
+        portfolioImageUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showNotification('Molimo izaberite sliku (JPG, PNG, GIF, itd.)', 'error');
+                return;
+            }
+            
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('Slika je prevelika. Maksimalna veličina je 5MB.', 'error');
+                return;
+            }
+            
+            const statusEl = document.getElementById('portfolio-image-upload-status');
+            const previewEl = document.getElementById('portfolio-image-preview');
+            const previewImgEl = document.getElementById('portfolio-image-preview-img');
+            const inputEl = document.getElementById('portfolio-image');
+            
+            try {
+                statusEl.textContent = 'Upload-ujem sliku...';
+                statusEl.className = 'upload-status uploading';
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImgEl.src = e.target.result;
+                    previewEl.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+                
+                // Upload to GitHub
+                const imageUrl = await uploadImage(file);
+                
+                // Update input field
+                inputEl.value = imageUrl;
+                statusEl.textContent = 'Slika uspešno upload-ovana!';
+                statusEl.className = 'upload-status success';
+                
+                showNotification('Slika je uspešno upload-ovana', 'success');
+            } catch (error) {
+                statusEl.textContent = 'Greška pri upload-u';
+                statusEl.className = 'upload-status error';
+                showNotification(error.message || 'Greška pri upload-u slike', 'error');
+                previewEl.style.display = 'none';
+            }
+        });
+    }
+
     // Modal close buttons
     document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', (e) => {
