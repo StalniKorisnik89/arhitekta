@@ -113,8 +113,13 @@ async function getFileContent(path) {
         if (response && response.content) {
             // GitHub API always returns base64 encoded content
             const base64Content = response.content.replace(/\s/g, '');
-            // Decode base64 and handle UTF-8 properly
-            const decodedContent = decodeURIComponent(escape(atob(base64Content)));
+            // Decode base64 and handle UTF-8 properly using TextDecoder
+            const binaryString = atob(base64Content);
+            const utf8Bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                utf8Bytes[i] = binaryString.charCodeAt(i);
+            }
+            const decodedContent = new TextDecoder('utf-8').decode(utf8Bytes);
             
             return {
                 content: JSON.parse(decodedContent),
@@ -137,7 +142,10 @@ async function updateFile(path, content, sha, message = 'Update content') {
     // Ensure content is properly formatted JSON string
     const contentString = JSON.stringify(content, null, 2);
     // Encode to base64 - handle UTF-8 characters properly
-    const contentBase64 = btoa(unescape(encodeURIComponent(contentString)));
+    // Use TextEncoder for proper UTF-8 encoding
+    const utf8Bytes = new TextEncoder().encode(contentString);
+    const binaryString = String.fromCharCode(...utf8Bytes);
+    const contentBase64 = btoa(binaryString);
     
     // GitHub API expects path segments to be separated by /, not URL encoded
     const pathParts = path.split('/');

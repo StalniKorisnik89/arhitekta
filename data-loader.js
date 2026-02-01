@@ -7,11 +7,17 @@ async function loadSiteContent() {
     try {
         // Add cache busting to ensure fresh data
         const cacheBuster = '?v=' + new Date().getTime();
-        const response = await fetch('data/content.json' + cacheBuster);
+        const response = await fetch('data/content.json' + cacheBuster, {
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        });
         if (!response.ok) {
             throw new Error('Failed to load content');
         }
-        siteContent = await response.json();
+        // Ensure proper UTF-8 decoding
+        const text = await response.text();
+        siteContent = JSON.parse(text);
         console.log('Site content loaded:', siteContent);
         applyContentToPage();
     } catch (error) {
