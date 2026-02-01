@@ -1060,10 +1060,22 @@ async function editUser(username) {
     document.getElementById('user-password').required = false; // Password not required when editing
     document.getElementById('user-password').placeholder = 'Ostavite prazno da zadržite postojeću lozinku';
     document.getElementById('password-hint').textContent = 'Ostavite prazno da zadržite postojeću lozinku ili unesite novu lozinku';
+    document.getElementById('user-github-token').value = user.githubToken || '';
+    document.getElementById('user-repo-owner').value = user.repoOwner || '';
+    document.getElementById('user-repo-name').value = user.repoName || '';
     document.getElementById('user-modal-title').textContent = 'Izmeni korisnika';
     
-    // Store original password hash for comparison
-    document.getElementById('user-password').dataset.originalHash = user.passwordHash;
+    // Store original password hash for reference
+    const passwordInput = document.getElementById('user-password');
+    passwordInput.dataset.originalHash = user.passwordHash;
+    
+    // Reset password visibility
+    passwordInput.type = 'password';
+    const toggleBtn = document.getElementById('toggle-password');
+    if (toggleBtn) {
+        toggleBtn.textContent = '👁️';
+        toggleBtn.title = 'Prikaži lozinku';
+    }
     
     openModal('user-modal');
 }

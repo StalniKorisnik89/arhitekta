@@ -50,6 +50,29 @@ async function authenticateUser(username, password) {
     return user;
 }
 
+// Get GitHub config for user (use user's token if available, otherwise use admin's)
+function getUserGitHubConfig(user) {
+    if (user.githubToken) {
+        // User has their own token
+        return {
+            token: user.githubToken,
+            owner: user.repoOwner || githubConfig.owner,
+            repo: user.repoName || githubConfig.repo
+        };
+    } else {
+        // Use admin's token (from localStorage)
+        const savedConfig = localStorage.getItem('githubConfig');
+        if (savedConfig) {
+            try {
+                return JSON.parse(savedConfig);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
+    }
+}
+
 // Detect default branch from repository
 async function detectDefaultBranch() {
     try {
