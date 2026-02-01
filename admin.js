@@ -547,6 +547,13 @@ function populateForms() {
         return;
     }
 
+    // Ensure DOM is ready
+    if (!document.getElementById('about-title-sr')) {
+        console.warn('populateForms: DOM elements not ready yet, retrying...');
+        setTimeout(() => populateForms(), 200);
+        return;
+    }
+
     console.log('Populating forms with data:', currentData);
 
     // About form - support both old and new format
