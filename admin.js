@@ -144,14 +144,18 @@ async function updateFile(path, content, sha, message = 'Update content') {
     // Encode to base64 - handle UTF-8 characters properly
     // Use a more reliable method for UTF-8 to base64 conversion
     function utf8ToBase64(str) {
-        // Convert string to UTF-8 bytes
-        const utf8Bytes = new Uint8Array(new TextEncoder().encode(str));
+        // Convert string to UTF-8 bytes using TextEncoder
+        const encoder = new TextEncoder();
+        const utf8Bytes = encoder.encode(str);
+        
         // Convert bytes to binary string in chunks to avoid stack overflow
         let binaryString = '';
         const chunkSize = 8192;
         for (let i = 0; i < utf8Bytes.length; i += chunkSize) {
-            const chunk = utf8Bytes.subarray(i, i + chunkSize);
-            binaryString += String.fromCharCode.apply(null, chunk);
+            const chunk = utf8Bytes.slice(i, Math.min(i + chunkSize, utf8Bytes.length));
+            // Convert Uint8Array chunk to regular array for apply
+            const chunkArray = Array.from(chunk);
+            binaryString += String.fromCharCode.apply(null, chunkArray);
         }
         // Encode to base64
         return btoa(binaryString);
