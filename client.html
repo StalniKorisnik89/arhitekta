@@ -65,39 +65,302 @@
         </nav>
 
         <main class="admin-content">
-            <!-- About Tab (Read-only) -->
+            <!-- About Tab -->
             <div id="tab-about" class="tab-content active">
-                <h2>O nama</h2>
-                <div id="about-content" class="read-only-content">
-                    <!-- Content will be loaded here -->
-                </div>
+                <h2>O nama - Sadržaj</h2>
+                <p class="info-text">Unesite prevode za sve tri jezika. Ako ne unesete prevod, koristiće se srpski kao fallback.</p>
+                <form id="about-form" class="admin-form">
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab-btn active" data-lang="sr">Srpski</button>
+                        <button type="button" class="lang-tab-btn" data-lang="en">Engleski</button>
+                        <button type="button" class="lang-tab-btn" data-lang="ru">Ruski</button>
+                    </div>
+                    
+                    <div class="lang-content" data-lang="sr">
+                        <div class="form-group">
+                            <label for="about-title-sr">Naslov (SR)</label>
+                            <input type="text" id="about-title-sr" name="title-sr" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="about-subtitle-sr">Podnaslov (SR)</label>
+                            <input type="text" id="about-subtitle-sr" name="subtitle-sr" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="about-description-sr">Opis (SR)</label>
+                            <textarea id="about-description-sr" name="description-sr" rows="6" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-content" data-lang="en" style="display: none;">
+                        <div class="form-group">
+                            <label for="about-title-en">Naslov (EN)</label>
+                            <input type="text" id="about-title-en" name="title-en">
+                        </div>
+                        <div class="form-group">
+                            <label for="about-subtitle-en">Podnaslov (EN)</label>
+                            <input type="text" id="about-subtitle-en" name="subtitle-en">
+                        </div>
+                        <div class="form-group">
+                            <label for="about-description-en">Opis (EN)</label>
+                            <textarea id="about-description-en" name="description-en" rows="6"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-content" data-lang="ru" style="display: none;">
+                        <div class="form-group">
+                            <label for="about-title-ru">Naslov (RU)</label>
+                            <input type="text" id="about-title-ru" name="title-ru">
+                        </div>
+                        <div class="form-group">
+                            <label for="about-subtitle-ru">Podnaslov (RU)</label>
+                            <input type="text" id="about-subtitle-ru" name="subtitle-ru">
+                        </div>
+                        <div class="form-group">
+                            <label for="about-description-ru">Opis (RU)</label>
+                            <textarea id="about-description-ru" name="description-ru" rows="6"></textarea>
+                        </div>
+                    </div>
+                    
+                    <h3>Statistike</h3>
+                    <div class="stats-grid">
+                        <div class="form-group">
+                            <label for="about-experience">Godine iskustva</label>
+                            <input type="text" id="about-experience" name="experience" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="about-projects">Projekti</label>
+                            <input type="text" id="about-projects" name="projects" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="about-clients">Klijenti</label>
+                            <input type="text" id="about-clients" name="clients" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Sačuvaj izmene</button>
+                </form>
             </div>
 
-            <!-- Services Tab (Read-only) -->
+            <!-- Services Tab -->
             <div id="tab-services" class="tab-content">
-                <h2>Usluge</h2>
-                <div id="services-content" class="read-only-content">
+                <div class="tab-header">
+                    <h2>Usluge</h2>
+                    <button id="add-service-btn" class="btn btn-primary">+ Dodaj uslugu</button>
+                </div>
+                
+                <div id="services-list" class="items-list">
                     <!-- Services will be loaded here -->
                 </div>
             </div>
 
-            <!-- Portfolio Tab (Read-only) -->
+            <!-- Portfolio Tab -->
             <div id="tab-portfolio" class="tab-content">
-                <h2>Portfolio Projekti</h2>
-                <div id="portfolio-content" class="read-only-content">
+                <div class="tab-header">
+                    <h2>Portfolio Projekti</h2>
+                    <button id="add-portfolio-btn" class="btn btn-primary">+ Dodaj projekat</button>
+                </div>
+                
+                <div id="portfolio-list" class="items-list">
                     <!-- Portfolio items will be loaded here -->
                 </div>
             </div>
 
-            <!-- Contact Tab (Read-only) -->
+            <!-- Contact Tab -->
             <div id="tab-contact" class="tab-content">
                 <h2>Kontakt Informacije</h2>
-                <div id="contact-content" class="read-only-content">
-                    <!-- Contact info will be loaded here -->
-                </div>
+                <form id="contact-form" class="admin-form">
+                    <div class="form-group">
+                        <label for="contact-phone">Telefon</label>
+                        <input type="text" id="contact-phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-email">Email</label>
+                        <input type="email" id="contact-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-address">Adresa</label>
+                        <input type="text" id="contact-address" name="address" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Sačuvaj izmene</button>
+                </form>
             </div>
         </main>
     </div>
+
+    <!-- Modals -->
+    <!-- Service Modal -->
+    <div id="service-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="service-modal-title">Dodaj uslugu</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="service-form" class="admin-form">
+                <input type="hidden" id="service-id" name="id">
+                <p class="info-text">Unesite prevode za sve tri jezika. Ako ne unesete prevod, koristiće se srpski.</p>
+                
+                <div class="language-tabs">
+                    <button type="button" class="lang-tab-btn active" data-lang="sr">Srpski</button>
+                    <button type="button" class="lang-tab-btn" data-lang="en">Engleski</button>
+                    <button type="button" class="lang-tab-btn" data-lang="ru">Ruski</button>
+                </div>
+                
+                <div class="lang-content" data-lang="sr">
+                    <div class="form-group">
+                        <label for="service-title-sr">Naziv usluge (SR)</label>
+                        <input type="text" id="service-title-sr" name="title-sr" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-description-sr">Opis (SR)</label>
+                        <textarea id="service-description-sr" name="description-sr" rows="4" required></textarea>
+                    </div>
+                </div>
+                
+                <div class="lang-content" data-lang="en" style="display: none;">
+                    <div class="form-group">
+                        <label for="service-title-en">Naziv usluge (EN)</label>
+                        <input type="text" id="service-title-en" name="title-en">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-description-en">Opis (EN)</label>
+                        <textarea id="service-description-en" name="description-en" rows="4"></textarea>
+                    </div>
+                </div>
+                
+                <div class="lang-content" data-lang="ru" style="display: none;">
+                    <div class="form-group">
+                        <label for="service-title-ru">Naziv usluge (RU)</label>
+                        <input type="text" id="service-title-ru" name="title-ru">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-description-ru">Opis (RU)</label>
+                        <textarea id="service-description-ru" name="description-ru" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary modal-close">Otkaži</button>
+                    <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Portfolio Modal -->
+    <div id="portfolio-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="portfolio-modal-title">Dodaj projekat</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="portfolio-form" class="admin-form">
+                <input type="hidden" id="portfolio-id" name="id">
+                <p class="info-text">Unesite prevode za sve tri jezika. Ako ne unesete prevod, koristiće se srpski.</p>
+                
+                <div class="form-group">
+                    <label for="portfolio-image">URL slike</label>
+                    <div class="image-upload-wrapper">
+                        <input type="url" id="portfolio-image" name="image" required>
+                        <div class="image-upload-controls">
+                            <label for="portfolio-image-upload" class="btn btn-small btn-secondary">Upload slike</label>
+                            <input type="file" id="portfolio-image-upload" accept="image/*" style="display: none;">
+                            <span id="portfolio-image-upload-status" class="upload-status"></span>
+                        </div>
+                        <div id="portfolio-image-preview" class="image-preview" style="display: none;">
+                            <img id="portfolio-image-preview-img" src="" alt="Preview">
+                            <button type="button" class="btn-remove-preview" onclick="removeImagePreview('portfolio')">&times;</button>
+                        </div>
+                    </div>
+                    <small>Unesite URL ili upload-ujte sliku direktno u repozitorijum</small>
+                </div>
+                
+                <div class="language-tabs">
+                    <button type="button" class="lang-tab-btn active" data-lang="sr">Srpski</button>
+                    <button type="button" class="lang-tab-btn" data-lang="en">Engleski</button>
+                    <button type="button" class="lang-tab-btn" data-lang="ru">Ruski</button>
+                </div>
+                
+                <div class="lang-content" data-lang="sr">
+                    <div class="form-group">
+                        <label for="portfolio-title-sr">Naziv projekta (SR)</label>
+                        <input type="text" id="portfolio-title-sr" name="title-sr" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-category-sr">Kategorija (SR)</label>
+                        <input type="text" id="portfolio-category-sr" name="category-sr" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-description-sr">Opis (SR)</label>
+                        <textarea id="portfolio-description-sr" name="description-sr" rows="4" required></textarea>
+                    </div>
+                </div>
+                
+                <div class="lang-content" data-lang="en" style="display: none;">
+                    <div class="form-group">
+                        <label for="portfolio-title-en">Naziv projekta (EN)</label>
+                        <input type="text" id="portfolio-title-en" name="title-en">
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-category-en">Kategorija (EN)</label>
+                        <input type="text" id="portfolio-category-en" name="category-en">
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-description-en">Opis (EN)</label>
+                        <textarea id="portfolio-description-en" name="description-en" rows="4"></textarea>
+                    </div>
+                </div>
+                
+                <div class="lang-content" data-lang="ru" style="display: none;">
+                    <div class="form-group">
+                        <label for="portfolio-title-ru">Naziv projekta (RU)</label>
+                        <input type="text" id="portfolio-title-ru" name="title-ru">
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-category-ru">Kategorija (RU)</label>
+                        <input type="text" id="portfolio-category-ru" name="category-ru">
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-description-ru">Opis (RU)</label>
+                        <textarea id="portfolio-description-ru" name="description-ru" rows="4"></textarea>
+                    </div>
+                </div>
+                <h4>Specifikacije</h4>
+                <div class="specs-grid">
+                    <div class="form-group">
+                        <label for="portfolio-area">Površina</label>
+                        <input type="text" id="portfolio-area" name="area" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-year">Godina</label>
+                        <input type="text" id="portfolio-year" name="year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-location">Lokacija</label>
+                        <input type="text" id="portfolio-location" name="location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio-status">Status</label>
+                        <input type="text" id="portfolio-status" name="status" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary modal-close">Otkaži</button>
+                    <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Učitavanje...</p>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification" style="display: none;"></div>
 
     <script src="client.js"></script>
 </body>
