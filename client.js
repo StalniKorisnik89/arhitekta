@@ -353,6 +353,27 @@ function removeImagePreview(type) {
 // ===== Data Management =====
 function getInitialData() {
     return {
+        hero: {
+            sr: {
+                headline: "Arhitektura koja oživljava prostor",
+                subtitle: "Kreiramo funkcionalne i estetski izuzetne prostore koji odražavaju vašu viziju i potrebe",
+                ctaContact: "Kontaktirajte nas",
+                ctaPortfolio: "Portfolio"
+            },
+            en: {
+                headline: "",
+                subtitle: "",
+                ctaContact: "",
+                ctaPortfolio: ""
+            },
+            ru: {
+                headline: "",
+                subtitle: "",
+                ctaContact: "",
+                ctaPortfolio: ""
+            },
+            backgroundImage: ""
+        },
         about: {
             title: "O nama",
             subtitle: "Studio za arhitekturu i dizajn enterijera",
@@ -518,6 +539,42 @@ function populateForms() {
             aboutForm.querySelectorAll('.lang-tab-btn').forEach(btn => btn.classList.remove('active'));
             firstLangBtn.classList.add('active');
         }
+    }
+
+    // Hero form
+    if (currentData.hero) {
+        const hero = currentData.hero;
+        const heroSr = hero.sr || {};
+        const heroEn = hero.en || {};
+        const heroRu = hero.ru || {};
+        
+        const headlineSrEl = document.getElementById('hero-headline-sr');
+        const subtitleSrEl = document.getElementById('hero-subtitle-sr');
+        const ctaContactSrEl = document.getElementById('hero-cta-contact-sr');
+        const ctaPortfolioSrEl = document.getElementById('hero-cta-portfolio-sr');
+        const headlineEnEl = document.getElementById('hero-headline-en');
+        const subtitleEnEl = document.getElementById('hero-subtitle-en');
+        const ctaContactEnEl = document.getElementById('hero-cta-contact-en');
+        const ctaPortfolioEnEl = document.getElementById('hero-cta-portfolio-en');
+        const headlineRuEl = document.getElementById('hero-headline-ru');
+        const subtitleRuEl = document.getElementById('hero-subtitle-ru');
+        const ctaContactRuEl = document.getElementById('hero-cta-contact-ru');
+        const ctaPortfolioRuEl = document.getElementById('hero-cta-portfolio-ru');
+        const backgroundImageEl = document.getElementById('hero-background-image');
+        
+        if (headlineSrEl) headlineSrEl.value = heroSr.headline || '';
+        if (subtitleSrEl) subtitleSrEl.value = heroSr.subtitle || '';
+        if (ctaContactSrEl) ctaContactSrEl.value = heroSr.ctaContact || '';
+        if (ctaPortfolioSrEl) ctaPortfolioSrEl.value = heroSr.ctaPortfolio || '';
+        if (headlineEnEl) headlineEnEl.value = heroEn.headline || '';
+        if (subtitleEnEl) subtitleEnEl.value = heroEn.subtitle || '';
+        if (ctaContactEnEl) ctaContactEnEl.value = heroEn.ctaContact || '';
+        if (ctaPortfolioEnEl) ctaPortfolioEnEl.value = heroEn.ctaPortfolio || '';
+        if (headlineRuEl) headlineRuEl.value = heroRu.headline || '';
+        if (subtitleRuEl) subtitleRuEl.value = heroRu.subtitle || '';
+        if (ctaContactRuEl) ctaContactRuEl.value = heroRu.ctaContact || '';
+        if (ctaPortfolioRuEl) ctaPortfolioRuEl.value = heroRu.ctaPortfolio || '';
+        if (backgroundImageEl) backgroundImageEl.value = hero.backgroundImage || '';
     }
 
     if (currentData.about) {
@@ -935,7 +992,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (activeTab) {
                 activeTab.classList.add('active');
                 
-                if (tabName === 'about' && currentData) {
+                if ((tabName === 'hero' || tabName === 'about') && currentData) {
                     setTimeout(() => {
                         populateForms();
                     }, 50);

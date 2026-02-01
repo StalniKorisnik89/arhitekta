@@ -59,6 +59,40 @@ function applyContentToPage() {
     // Get current language from script.js
     const currentLang = window.currentLanguage || localStorage.getItem('language') || 'sr';
 
+    // Update Hero section
+    if (siteContent.hero) {
+        const hero = siteContent.hero;
+        const heroData = hero[currentLang] || hero.sr || {};
+        
+        const heroTitle = document.querySelector('.hero__title');
+        const heroSubtitle = document.querySelector('.hero__subtitle');
+        const heroCtaContact = document.querySelector('.hero__cta .btn--primary');
+        const heroCtaPortfolio = document.querySelector('.hero__cta .btn--secondary');
+        
+        if (heroTitle) heroTitle.textContent = heroData.headline || '';
+        if (heroSubtitle) heroSubtitle.textContent = heroData.subtitle || '';
+        if (heroCtaContact) heroCtaContact.textContent = heroData.ctaContact || '';
+        if (heroCtaPortfolio) heroCtaPortfolio.textContent = heroData.ctaPortfolio || '';
+        
+        // Update background image if provided
+        if (hero.backgroundImage) {
+            const heroSection = document.querySelector('.hero');
+            if (heroSection) {
+                heroSection.style.setProperty('--hero-bg-image', `url(${hero.backgroundImage})`);
+                // Also update the ::before pseudo-element background
+                const style = document.createElement('style');
+                style.textContent = `
+                    .hero::before {
+                        background-image: url(${hero.backgroundImage});
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        console.log('✓ Updated hero section');
+    }
+
     // Update About section - support both old and new multilingual format
     if (siteContent.about) {
         const aboutTitle = document.querySelector('#about .section__title');

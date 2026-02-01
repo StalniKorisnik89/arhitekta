@@ -71,6 +71,7 @@
         </header>
 
         <nav class="admin-nav">
+            <button class="nav-tab" data-tab="hero">Početna</button>
             <button class="nav-tab active" data-tab="about">O nama</button>
             <button class="nav-tab" data-tab="services">Usluge</button>
             <button class="nav-tab" data-tab="portfolio">Portfolio</button>
@@ -79,6 +80,84 @@
         </nav>
 
         <main class="admin-content">
+            <!-- Hero Tab -->
+            <div id="tab-hero" class="tab-content">
+                <h2>Početna strana - Hero sekcija</h2>
+                <p class="info-text">Unesite prevode za sve tri jezika. Ako ne unesete prevod, koristiće se srpski kao fallback.</p>
+                <form id="hero-form" class="admin-form">
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab-btn active" data-lang="sr">Srpski</button>
+                        <button type="button" class="lang-tab-btn" data-lang="en">Engleski</button>
+                        <button type="button" class="lang-tab-btn" data-lang="ru">Ruski</button>
+                    </div>
+                    
+                    <div class="lang-content" data-lang="sr">
+                        <div class="form-group">
+                            <label for="hero-headline-sr">Naslov (SR)</label>
+                            <input type="text" id="hero-headline-sr" name="headline-sr" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-subtitle-sr">Podnaslov (SR)</label>
+                            <textarea id="hero-subtitle-sr" name="subtitle-sr" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-cta-contact-sr">CTA Kontakt tekst (SR)</label>
+                            <input type="text" id="hero-cta-contact-sr" name="cta-contact-sr" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-cta-portfolio-sr">CTA Portfolio tekst (SR)</label>
+                            <input type="text" id="hero-cta-portfolio-sr" name="cta-portfolio-sr" required>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-content" data-lang="en" style="display: none;">
+                        <div class="form-group">
+                            <label for="hero-headline-en">Naslov (EN)</label>
+                            <input type="text" id="hero-headline-en" name="headline-en">
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-subtitle-en">Podnaslov (EN)</label>
+                            <textarea id="hero-subtitle-en" name="subtitle-en" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-cta-contact-en">CTA Kontakt tekst (EN)</label>
+                            <input type="text" id="hero-cta-contact-en" name="cta-contact-en">
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-cta-portfolio-en">CTA Portfolio tekst (EN)</label>
+                            <input type="text" id="hero-cta-portfolio-en" name="cta-portfolio-en">
+                        </div>
+                    </div>
+                    
+                    <div class="lang-content" data-lang="ru" style="display: none;">
+                        <div class="form-group">
+                            <label for="hero-headline-ru">Naslov (RU)</label>
+                            <input type="text" id="hero-headline-ru" name="headline-ru">
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-subtitle-ru">Podnaslov (RU)</label>
+                            <textarea id="hero-subtitle-ru" name="subtitle-ru" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-cta-contact-ru">CTA Kontakt tekst (RU)</label>
+                            <input type="text" id="hero-cta-contact-ru" name="cta-contact-ru">
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-cta-portfolio-ru">CTA Portfolio tekst (RU)</label>
+                            <input type="text" id="hero-cta-portfolio-ru" name="cta-portfolio-ru">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hero-background-image">URL pozadinske slike</label>
+                        <input type="url" id="hero-background-image" name="background-image">
+                        <small>URL slike za pozadinu Hero sekcije (opciono)</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Sačuvaj izmene</button>
+                </form>
+            </div>
+
             <!-- About Tab -->
             <div id="tab-about" class="tab-content active">
                 <h2>O nama - Sadržaj</h2>
