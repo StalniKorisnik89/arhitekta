@@ -723,6 +723,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Language tabs navigation (for About section)
+    document.querySelectorAll('.lang-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            const form = btn.closest('.admin-form');
+            
+            if (!form) return;
+            
+            // Update active button
+            form.querySelectorAll('.lang-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Show correct language content
+            form.querySelectorAll('.lang-content').forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+            });
+            
+            const langContent = form.querySelector(`.lang-content[data-lang="${lang}"]`);
+            if (langContent) {
+                langContent.style.display = 'block';
+                langContent.classList.add('active');
+            }
+        });
+    });
+
     // About form
     document.getElementById('about-form').addEventListener('submit', async (e) => {
         e.preventDefault();
