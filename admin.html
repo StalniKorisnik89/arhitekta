@@ -265,8 +265,19 @@
                 
                 <div class="form-group">
                     <label for="portfolio-image">URL slike</label>
-                    <input type="url" id="portfolio-image" name="image" required>
-                    <small>Ili upload slike preko GitHub</small>
+                    <div class="image-upload-wrapper">
+                        <input type="url" id="portfolio-image" name="image" required>
+                        <div class="image-upload-controls">
+                            <label for="portfolio-image-upload" class="btn btn-small btn-secondary">Upload slike</label>
+                            <input type="file" id="portfolio-image-upload" accept="image/*" style="display: none;">
+                            <span id="portfolio-image-upload-status" class="upload-status"></span>
+                        </div>
+                        <div id="portfolio-image-preview" class="image-preview" style="display: none;">
+                            <img id="portfolio-image-preview-img" src="" alt="Preview">
+                            <button type="button" class="btn-remove-preview" onclick="removeImagePreview('portfolio')">&times;</button>
+                        </div>
+                    </div>
+                    <small>Unesite URL ili upload-ujte sliku direktno u repozitorijum</small>
                 </div>
                 
                 <h4>Srpski (SR) - Obavezno</h4>

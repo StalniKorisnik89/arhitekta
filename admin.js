@@ -271,6 +271,81 @@ async function createFile(path, content, message = 'Create file') {
     return await updateFile(path, content, null, message);
 }
 
+// ===== Image Upload Functions =====
+async function uploadImage(file, folder = 'assets/images') {
+    showLoading(true);
+    try {
+        // Generate unique filename
+        const timestamp = Date.now();
+        const randomStr = Math.random().toString(36).substring(2, 8);
+        const fileExtension = file.name.split('.').pop();
+        const fileName = `${timestamp}-${randomStr}.${fileExtension}`;
+        const filePath = `${folder}/${fileName}`;
+        
+        // Convert file to base64
+        const base64 = await fileToBase64(file);
+        
+        // Upload to GitHub
+        const pathParts = filePath.split('/');
+        const encodedPath = pathParts.map(part => encodeURIComponent(part)).join('/');
+        
+        const body = {
+            message: `Upload image: ${fileName}`,
+            content: base64,
+            branch: DEFAULT_BRANCH
+        };
+        
+        const response = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}/contents/${encodedPath}`, {
+            method: 'PUT',
+            body: JSON.stringify(body)
+        });
+        
+        // Generate URL for the uploaded image
+        // For GitHub Pages, use raw.githubusercontent.com or the Pages URL
+        const imageUrl = `https://raw.githubusercontent.com/${githubConfig.owner}/${githubConfig.repo}/${DEFAULT_BRANCH}/${filePath}`;
+        // Alternative: use GitHub Pages URL if available
+        // const imageUrl = `https://${githubConfig.owner}.github.io/${githubConfig.repo}/${filePath}`;
+        
+        console.log('Image uploaded successfully:', imageUrl);
+        return imageUrl;
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        throw new Error('Greška pri upload-u slike: ' + (error.message || 'Nepoznata greška'));
+    } finally {
+        showLoading(false);
+    }
+}
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            // Remove data:image/...;base64, prefix
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+function removeImagePreview(type) {
+    const preview = document.getElementById(`${type}-image-preview`);
+    const previewImg = document.getElementById(`${type}-image-preview-img`);
+    const input = document.getElementById(`${type}-image`);
+    const uploadInput = document.getElementById(`${type}-image-upload`);
+    const status = document.getElementById(`${type}-image-upload-status`);
+    
+    if (preview) preview.style.display = 'none';
+    if (previewImg) previewImg.src = '';
+    if (input) input.value = '';
+    if (uploadInput) uploadInput.value = '';
+    if (status) {
+        status.textContent = '';
+        status.className = 'upload-status';
+    }
+}
+
 // ===== Data Management =====
 let currentData = null;
 let currentSha = null;
@@ -979,3 +1054,4 @@ window.editService = editService;
 window.deleteService = deleteService;
 window.editPortfolio = editPortfolio;
 window.deletePortfolio = deletePortfolio;
+window.removeImagePreview = removeImagePreview;

@@ -356,6 +356,73 @@ body {
     display: block !important;
 }
 
+/* ===== Image Upload ===== */
+.image-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.image-upload-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-status {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.upload-status.uploading {
+    color: #2196f3;
+}
+
+.upload-status.success {
+    color: #4caf50;
+}
+
+.upload-status.error {
+    color: #f44336;
+}
+
+.image-preview {
+    position: relative;
+    max-width: 300px;
+    margin-top: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.image-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.btn-remove-preview {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.btn-remove-preview:hover {
+    background: rgba(244, 67, 54, 1);
+}
+
 .stats-grid,
 .specs-grid {
     display: grid;
