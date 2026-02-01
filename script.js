@@ -1,6 +1,7 @@
 // ===== Language Switcher & i18n =====
 let currentLanguage = localStorage.getItem('language') || 'sr';
 let translations = {};
+window.translations = translations; // Export for data-loader
 
 // Load translations
 async function loadTranslations(lang) {
