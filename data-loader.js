@@ -7,24 +7,27 @@ async function loadSiteContent() {
     try {
         // Add cache busting to ensure fresh data
         const cacheBuster = '?v=' + new Date().getTime();
+        console.log('Loading site content from data/content.json...');
         const response = await fetch('data/content.json' + cacheBuster, {
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
             }
         });
         if (!response.ok) {
-            throw new Error('Failed to load content');
+            throw new Error('Failed to load content: ' + response.status);
         }
         // Ensure proper UTF-8 decoding
         const text = await response.text();
         siteContent = JSON.parse(text);
-        console.log('Site content loaded:', siteContent);
+        console.log('Site content loaded successfully:', siteContent);
         applyContentToPage();
+        return siteContent;
     } catch (error) {
         console.error('Error loading site content:', error);
         // Fallback to default content if file doesn't exist
         siteContent = getDefaultContent();
         applyContentToPage();
+        return siteContent;
     }
 }
 
@@ -76,38 +79,63 @@ function applyContentToPage() {
 
     // Update Services
     if (siteContent.services && siteContent.services.length > 0) {
-        const servicesGrid = document.querySelector('.services__grid');
-        if (servicesGrid) {
-            servicesGrid.innerHTML = '';
-            siteContent.services.forEach((service, index) => {
-                const serviceCard = createServiceCard(service, index);
-                servicesGrid.appendChild(serviceCard);
-            });
+        const servicesSection = document.getElementById('services');
+        if (servicesSection) {
+            const servicesGrid = servicesSection.querySelector('.services__grid');
+            if (servicesGrid) {
+                servicesGrid.innerHTML = '';
+                siteContent.services.forEach((service, index) => {
+                    const serviceCard = createServiceCard(service, index);
+                    servicesGrid.appendChild(serviceCard);
+                });
+                console.log('✓ Updated services:', siteContent.services.length);
+            }
         }
     }
 
     // Update Portfolio
     if (siteContent.portfolio && siteContent.portfolio.length > 0) {
-        const portfolioGrid = document.querySelector('.portfolio__grid');
-        if (portfolioGrid) {
-            portfolioGrid.innerHTML = '';
-            siteContent.portfolio.forEach((project) => {
-                const portfolioItem = createPortfolioItem(project);
-                portfolioGrid.appendChild(portfolioItem);
-            });
+        const portfolioSection = document.getElementById('portfolio');
+        if (portfolioSection) {
+            const portfolioGrid = portfolioSection.querySelector('.portfolio__grid');
+            if (portfolioGrid) {
+                portfolioGrid.innerHTML = '';
+                siteContent.portfolio.forEach((project) => {
+                    const portfolioItem = createPortfolioItem(project);
+                    portfolioGrid.appendChild(portfolioItem);
+                });
+                console.log('✓ Updated portfolio:', siteContent.portfolio.length);
+            }
         }
     }
 
     // Update Contact
     if (siteContent.contact) {
-        const contactPhone = document.querySelector('.contact-info-item:nth-of-type(1) p');
-        const contactEmail = document.querySelector('.contact-info-item:nth-of-type(2) p');
-        const contactAddress = document.querySelector('.contact-info-item:nth-of-type(3) p');
-        
-        if (contactPhone) contactPhone.textContent = siteContent.contact.phone;
-        if (contactEmail) contactEmail.textContent = siteContent.contact.email;
-        if (contactAddress) contactAddress.textContent = siteContent.contact.address;
+        const contactSection = document.getElementById('contact');
+        if (contactSection) {
+            const contactInfoItems = contactSection.querySelectorAll('.contact-info-item');
+            if (contactInfoItems.length >= 3) {
+                const contactPhone = contactInfoItems[0].querySelector('p');
+                const contactEmail = contactInfoItems[1].querySelector('p');
+                const contactAddress = contactInfoItems[2].querySelector('p');
+                
+                if (contactPhone) {
+                    contactPhone.textContent = siteContent.contact.phone;
+                    console.log('✓ Updated contact phone');
+                }
+                if (contactEmail) {
+                    contactEmail.textContent = siteContent.contact.email;
+                    console.log('✓ Updated contact email');
+                }
+                if (contactAddress) {
+                    contactAddress.textContent = siteContent.contact.address;
+                    console.log('✓ Updated contact address');
+                }
+            }
+        }
     }
+    
+    console.log('✓ Content application complete!');
 }
 
 function createServiceCard(service, index) {
@@ -165,12 +193,22 @@ function createPortfolioItem(project) {
     return item;
 }
 
-// Load content when DOM is ready
+// Load content when DOM is ready and after i18n system loads
+function initDataLoader() {
+    // Wait a bit for i18n system to initialize first
+    setTimeout(() => {
+        loadSiteContent().then(() => {
+            console.log('Data loader initialized and content applied');
+        });
+    }, 500);
+}
+
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadSiteContent);
+    document.addEventListener('DOMContentLoaded', initDataLoader);
 } else {
-    loadSiteContent();
+    initDataLoader();
 }
 
 // Export for use in other scripts
 window.siteContent = siteContent;
+window.reloadSiteContent = loadSiteContent; // Allow manual reload
