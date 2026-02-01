@@ -7,7 +7,10 @@ let githubConfig = {
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const DATA_FILE_PATH = 'data/content.json';
+const USERS_FILE_PATH = 'data/users.json';
 let DEFAULT_BRANCH = 'main'; // Will be detected from repo
+let currentUsers = [];
+let currentUsersSha = null;
 
 // Detect default branch from repository
 async function detectDefaultBranch() {
@@ -679,6 +682,9 @@ function populateForms() {
     
     // Portfolio list
     renderPortfolio();
+    
+    // Users list
+    renderUsers();
 }
 
 // ===== Services Management =====
@@ -1266,6 +1272,51 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add buttons
     document.getElementById('add-service-btn').addEventListener('click', addService);
     document.getElementById('add-portfolio-btn').addEventListener('click', addPortfolio);
+    const addUserBtn = document.getElementById('add-user-btn');
+    if (addUserBtn) {
+        addUserBtn.addEventListener('click', addUser);
+    }
+
+    // User form
+    const userForm = document.getElementById('user-form');
+    if (userForm) {
+        userForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const username = formData.get('username');
+            const password = formData.get('password');
+            const id = formData.get('id');
+
+            if (!username || !password) {
+                showNotification('Molimo unesite korisničko ime i lozinku', 'error');
+                return;
+            }
+
+            const passwordHash = await hashPassword(password);
+            const user = {
+                username: username,
+                passwordHash: passwordHash
+            };
+
+            if (id) {
+                // Update existing user
+                const index = currentUsers.findIndex(u => u.username === id);
+                if (index !== -1) {
+                    currentUsers[index] = user;
+                }
+            } else {
+                // Check if username already exists
+                if (currentUsers.find(u => u.username === username)) {
+                    showNotification('Korisnik sa ovim korisničkim imenom već postoji', 'error');
+                    return;
+                }
+                currentUsers.push(user);
+            }
+
+            closeModal('user-modal');
+            await saveUsers(id ? 'Update user' : 'Add user');
+        });
+    }
 
     // Image upload handlers
     const portfolioImageUpload = document.getElementById('portfolio-image-upload');

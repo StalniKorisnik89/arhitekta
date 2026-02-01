@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klijent Portal | Arhitektonski Studio</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <h1>Klijent Portal</h1>
+            <p class="login-subtitle">Prijavite se sa vašim korisničkim imenom i lozinkom</p>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="username">Korisničko ime</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Unesite korisničko ime"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Lozinka</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Unesite lozinku"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Prijavi se</button>
+            </form>
+            
+            <div id="login-error" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Client Dashboard -->
+    <div id="client-dashboard" class="admin-dashboard" style="display: none;">
+        <header class="admin-header">
+            <div class="admin-header__content">
+                <h1>Klijent Portal</h1>
+                <div class="admin-header__actions">
+                    <span id="client-info" class="repo-info"></span>
+                    <button id="logout-btn" class="btn btn-secondary">Odjavi se</button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="admin-nav">
+            <button class="nav-tab active" data-tab="about">O nama</button>
+            <button class="nav-tab" data-tab="services">Usluge</button>
+            <button class="nav-tab" data-tab="portfolio">Portfolio</button>
+            <button class="nav-tab" data-tab="contact">Kontakt</button>
+        </nav>
+
+        <main class="admin-content">
+            <!-- About Tab (Read-only) -->
+            <div id="tab-about" class="tab-content active">
+                <h2>O nama</h2>
+                <div id="about-content" class="read-only-content">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Services Tab (Read-only) -->
+            <div id="tab-services" class="tab-content">
+                <h2>Usluge</h2>
+                <div id="services-content" class="read-only-content">
+                    <!-- Services will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Portfolio Tab (Read-only) -->
+            <div id="tab-portfolio" class="tab-content">
+                <h2>Portfolio Projekti</h2>
+                <div id="portfolio-content" class="read-only-content">
+                    <!-- Portfolio items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Contact Tab (Read-only) -->
+            <div id="tab-contact" class="tab-content">
+                <h2>Kontakt Informacije</h2>
+                <div id="contact-content" class="read-only-content">
+                    <!-- Contact info will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="client.js"></script>
+</body>
+</html>

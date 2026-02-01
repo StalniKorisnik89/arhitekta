@@ -75,6 +75,7 @@
             <button class="nav-tab" data-tab="services">Usluge</button>
             <button class="nav-tab" data-tab="portfolio">Portfolio</button>
             <button class="nav-tab" data-tab="contact">Kontakt</button>
+            <button class="nav-tab" data-tab="users">Korisnici</button>
         </nav>
 
         <main class="admin-content">
@@ -199,6 +200,18 @@
                     
                     <button type="submit" class="btn btn-primary">Sačuvaj izmene</button>
                 </form>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="tab-users" class="tab-content">
+                <div class="tab-header">
+                    <h2>Upravljanje Korisnicima</h2>
+                    <button id="add-user-btn" class="btn btn-primary">+ Dodaj korisnika</button>
+                </div>
+                
+                <div id="users-list" class="items-list">
+                    <!-- Users will be loaded here -->
+                </div>
             </div>
         </main>
     </div>
@@ -357,6 +370,32 @@
                         <label for="portfolio-status">Status</label>
                         <input type="text" id="portfolio-status" name="status" required>
                     </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary modal-close">Otkaži</button>
+                    <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="user-modal-title">Dodaj korisnika</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="user-form" class="admin-form">
+                <input type="hidden" id="user-id" name="id">
+                <div class="form-group">
+                    <label for="user-username">Korisničko ime</label>
+                    <input type="text" id="user-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-password">Lozinka</label>
+                    <input type="password" id="user-password" name="password" required>
+                    <small>Lozinka će biti sačuvana u hash formatu</small>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary modal-close">Otkaži</button>
