@@ -8,7 +8,13 @@ async function loadTranslations(lang) {
     try {
         const response = await fetch(`translations/${lang}.json`);
         translations = await response.json();
+        window.translations = translations; // Update window reference
         applyTranslations();
+        
+        // Trigger data-loader if it's waiting
+        if (window.onTranslationsLoaded) {
+            window.onTranslationsLoaded();
+        }
     } catch (error) {
         console.error('Error loading translations:', error);
     }

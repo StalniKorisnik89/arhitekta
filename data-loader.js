@@ -212,3 +212,16 @@ if (document.readyState === 'loading') {
 // Export for use in other scripts
 window.siteContent = siteContent;
 window.reloadSiteContent = loadSiteContent; // Allow manual reload
+
+// Listen for i18n system to finish loading
+window.onTranslationsLoaded = function() {
+    // i18n just loaded, now apply our content
+    setTimeout(() => {
+        if (siteContent) {
+            applyContentToPage();
+            console.log('✓ Content re-applied after i18n loaded');
+        } else {
+            loadSiteContent();
+        }
+    }, 100);
+};
