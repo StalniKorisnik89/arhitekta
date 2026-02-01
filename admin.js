@@ -617,7 +617,7 @@ function populateForms() {
 
     console.log('Populating forms with data:', currentData);
 
-    // Hero form
+    // Hero form - populate data (do this first since it's the default tab)
     if (currentData.hero) {
         const hero = currentData.hero;
         const heroSr = hero.sr || {};
@@ -650,7 +650,18 @@ function populateForms() {
         if (subtitleRuEl) subtitleRuEl.value = heroRu.subtitle || '';
         if (ctaContactRuEl) ctaContactRuEl.value = heroRu.ctaContact || '';
         if (ctaPortfolioRuEl) ctaPortfolioRuEl.value = heroRu.ctaPortfolio || '';
-        if (backgroundImageEl) backgroundImageEl.value = hero.backgroundImage || '';
+        if (backgroundImageEl) {
+            backgroundImageEl.value = hero.backgroundImage || '';
+            // Show preview if image exists
+            if (hero.backgroundImage) {
+                const previewEl = document.getElementById('hero-background-image-preview');
+                const previewImgEl = document.getElementById('hero-background-image-preview-img');
+                if (previewEl && previewImgEl) {
+                    previewImgEl.src = hero.backgroundImage;
+                    previewEl.style.display = 'block';
+                }
+            }
+        }
     }
 
     // About form - support both old and new format
