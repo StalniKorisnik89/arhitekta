@@ -202,11 +202,33 @@ async function updateFile(path, content, sha, message = 'Update content') {
         // Handle 409 Conflict (SHA mismatch) - file was modified by another process
         if (error.message && (error.message.includes('409') || error.message.includes('does not match') || error.message.includes('Conflict'))) {
             console.log('SHA mismatch detected (409 Conflict). File was modified. Retrying with fresh SHA...');
-            // Get fresh SHA and retry
-            try {
-                const freshFileInfo = await getFileContent(path);
-                if (freshFileInfo && freshFileInfo.sha) {
+            
+            // Wait a bit for GitHub to process any pending commits
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Get fresh SHA and retry (with multiple attempts if needed)
+            let retryAttempts = 3;
+            let lastError = null;
+            
+            for (let attempt = 1; attempt <= retryAttempts; attempt++) {
+                try {
+                    console.log(`Retry attempt ${attempt}/${retryAttempts}...`);
+                    
+                    // Get fresh file info
+                    const freshFileInfo = await getFileContent(path);
+                    if (!freshFileInfo || !freshFileInfo.sha) {
+                        throw new Error('Ne mogu da dobavim najnoviji SHA fajla.');
+                    }
+                    
                     const freshSha = freshFileInfo.sha;
+                    
+                    // Check if SHA is different from original
+                    if (sha && freshSha === sha) {
+                        console.log('SHA is still the same, waiting a bit more...');
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        continue;
+                    }
+                    
                     console.log('Retrying with fresh SHA:', freshSha.substring(0, 7) + '...');
                     
                     // Retry with fresh SHA
@@ -224,13 +246,23 @@ async function updateFile(path, content, sha, message = 'Update content') {
                     
                     console.log('Retry successful with fresh SHA');
                     return true;
-                } else {
-                    throw new Error('Ne mogu da dobavim najnoviji SHA fajla. Pokušajte ponovo.');
+                } catch (retryError) {
+                    console.error(`Retry attempt ${attempt} failed:`, retryError);
+                    lastError = retryError;
+                    
+                    // If it's still a 409, wait and try again
+                    if (retryError.message && (retryError.message.includes('409') || retryError.message.includes('does not match'))) {
+                        if (attempt < retryAttempts) {
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            continue;
+                        }
+                    }
                 }
-            } catch (retryError) {
-                console.error('Retry with fresh SHA failed:', retryError);
-                throw new Error('Fajl je promenjen na serveru. Osvežite stranicu i pokušajte ponovo.');
             }
+            
+            // All retry attempts failed
+            console.error('All retry attempts failed');
+            throw new Error('Fajl je promenjen na serveru. Osvežite stranicu i pokušajte ponovo.');
         }
         
         // If error is 404, it means file doesn't exist
