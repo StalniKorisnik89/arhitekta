@@ -153,6 +153,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         const href = this.getAttribute('href');
         if (href === '#') return;
         
+        // Skip mailto: and tel: links - let them work normally
+        if (href.startsWith('mailto:') || href.startsWith('tel:')) {
+            return;
+        }
+        
         e.preventDefault();
         const target = document.querySelector(href);
         
