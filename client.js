@@ -53,14 +53,29 @@ async function authenticateUser(username, password) {
 // Get GitHub config for user (use user's token if available, otherwise use admin's)
 function getUserGitHubConfig(user) {
     if (user.githubToken) {
-        // User has their own token
+        // User has their own token - use it independently
+        // Get admin config for fallback owner/repo if user didn't specify
+        let fallbackOwner = 'StalniKorisnik89'; // Default
+        let fallbackRepo = 'arhitekta'; // Default
+        
+        const savedConfig = localStorage.getItem('githubConfig');
+        if (savedConfig) {
+            try {
+                const adminConfig = JSON.parse(savedConfig);
+                fallbackOwner = adminConfig.owner || fallbackOwner;
+                fallbackRepo = adminConfig.repo || fallbackRepo;
+            } catch (e) {
+                // Use defaults
+            }
+        }
+        
         return {
             token: user.githubToken,
-            owner: user.repoOwner || githubConfig.owner,
-            repo: user.repoName || githubConfig.repo
+            owner: user.repoOwner || fallbackOwner,
+            repo: user.repoName || fallbackRepo
         };
     } else {
-        // Use admin's token (from localStorage)
+        // User doesn't have their own token - use admin's token (from localStorage) as fallback
         const savedConfig = localStorage.getItem('githubConfig');
         if (savedConfig) {
             try {
@@ -69,6 +84,7 @@ function getUserGitHubConfig(user) {
                 return null;
             }
         }
+        // No admin token either - return null (will show error)
         return null;
     }
 }
