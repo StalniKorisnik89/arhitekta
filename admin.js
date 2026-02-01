@@ -555,10 +555,27 @@ function populateForms() {
     }
 
     // Ensure DOM is ready
-    if (!document.getElementById('about-title-sr')) {
+    const titleSrEl = document.getElementById('about-title-sr');
+    if (!titleSrEl) {
         console.warn('populateForms: DOM elements not ready yet, retrying...');
         setTimeout(() => populateForms(), 200);
         return;
+    }
+
+    // Ensure first language tab (sr) is visible
+    const aboutForm = document.getElementById('about-form');
+    if (aboutForm) {
+        const firstLangContent = aboutForm.querySelector('.lang-content[data-lang="sr"]');
+        if (firstLangContent) {
+            firstLangContent.style.display = 'block';
+            firstLangContent.classList.add('active');
+        }
+        // Ensure first tab button is active
+        const firstLangBtn = aboutForm.querySelector('.lang-tab-btn[data-lang="sr"]');
+        if (firstLangBtn) {
+            aboutForm.querySelectorAll('.lang-tab-btn').forEach(btn => btn.classList.remove('active'));
+            firstLangBtn.classList.add('active');
+        }
     }
 
     console.log('Populating forms with data:', currentData);
@@ -922,12 +939,20 @@ document.addEventListener('DOMContentLoaded', () => {
             
             loadData().then(() => {
                 // After data is loaded, ensure "about" tab is populated if it's active
+                // Multiple attempts with increasing delays to ensure it works
                 setTimeout(() => {
                     const aboutTab = document.getElementById('tab-about');
                     if (aboutTab && aboutTab.classList.contains('active') && currentData) {
                         populateForms();
                     }
                 }, 300);
+                
+                setTimeout(() => {
+                    const aboutTab = document.getElementById('tab-about');
+                    if (aboutTab && aboutTab.classList.contains('active') && currentData) {
+                        populateForms();
+                    }
+                }, 600);
             });
         } catch (error) {
             console.error('Error loading saved config:', error);
