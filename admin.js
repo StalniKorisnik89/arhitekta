@@ -412,8 +412,11 @@ async function loadData() {
             
             // Additional populate after longer delay to ensure everything is ready
             setTimeout(() => {
+                const heroTab = document.getElementById('tab-hero');
                 const aboutTab = document.getElementById('tab-about');
-                if (aboutTab && aboutTab.classList.contains('active')) {
+                if (heroTab && heroTab.classList.contains('active')) {
+                    populateForms();
+                } else if (aboutTab && aboutTab.classList.contains('active')) {
                     populateForms();
                 }
             }, 400);
@@ -1209,18 +1212,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             loadData().then(() => {
-                // After data is loaded, ensure "about" tab is populated if it's active
+                // After data is loaded, ensure hero tab is populated if it's active (it's now the default)
                 // Multiple attempts with increasing delays to ensure it works
                 setTimeout(() => {
+                    const heroTab = document.getElementById('tab-hero');
                     const aboutTab = document.getElementById('tab-about');
-                    if (aboutTab && aboutTab.classList.contains('active') && currentData) {
+                    if (heroTab && heroTab.classList.contains('active') && currentData) {
+                        populateForms();
+                    } else if (aboutTab && aboutTab.classList.contains('active') && currentData) {
                         populateForms();
                     }
                 }, 300);
                 
                 setTimeout(() => {
+                    const heroTab = document.getElementById('tab-hero');
                     const aboutTab = document.getElementById('tab-about');
-                    if (aboutTab && aboutTab.classList.contains('active') && currentData) {
+                    if (heroTab && heroTab.classList.contains('active') && currentData) {
+                        populateForms();
+                    } else if (aboutTab && aboutTab.classList.contains('active') && currentData) {
                         populateForms();
                     }
                 }, 600);
