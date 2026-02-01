@@ -142,10 +142,21 @@ async function updateFile(path, content, sha, message = 'Update content') {
     // Ensure content is properly formatted JSON string
     const contentString = JSON.stringify(content, null, 2);
     // Encode to base64 - handle UTF-8 characters properly
-    // Use TextEncoder for proper UTF-8 encoding
-    const utf8Bytes = new TextEncoder().encode(contentString);
-    const binaryString = String.fromCharCode(...utf8Bytes);
-    const contentBase64 = btoa(binaryString);
+    // Use a more reliable method for UTF-8 to base64 conversion
+    function utf8ToBase64(str) {
+        // Convert string to UTF-8 bytes
+        const utf8Bytes = new Uint8Array(new TextEncoder().encode(str));
+        // Convert bytes to binary string in chunks to avoid stack overflow
+        let binaryString = '';
+        const chunkSize = 8192;
+        for (let i = 0; i < utf8Bytes.length; i += chunkSize) {
+            const chunk = utf8Bytes.subarray(i, i + chunkSize);
+            binaryString += String.fromCharCode.apply(null, chunk);
+        }
+        // Encode to base64
+        return btoa(binaryString);
+    }
+    const contentBase64 = utf8ToBase64(contentString);
     
     // GitHub API expects path segments to be separated by /, not URL encoded
     const pathParts = path.split('/');
