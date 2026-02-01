@@ -393,6 +393,13 @@ async function loadData() {
             // Wait a bit to ensure DOM is ready
             setTimeout(() => {
                 populateForms();
+                // Also ensure "about" tab is populated if it's active
+                const aboutTab = document.getElementById('tab-about');
+                if (aboutTab && aboutTab.classList.contains('active')) {
+                    setTimeout(() => {
+                        populateForms();
+                    }, 150);
+                }
             }, 100);
             showNotification('Podaci uspešno učitani', 'success');
         } else {
@@ -983,6 +990,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         populateForms();
                     }, 50);
+                }
+                
+                // If "about" tab is already active on page load, populate immediately
+                if (tabName === 'about' && activeTab.classList.contains('active') && currentData) {
+                    setTimeout(() => {
+                        populateForms();
+                    }, 100);
                 }
             }
         });
