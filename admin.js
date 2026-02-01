@@ -862,7 +862,35 @@ function addPortfolio() {
 // ===== Modal Functions =====
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
+    if (!modal) return;
+    
     modal.style.display = 'flex';
+    
+    // Reset language tabs to first tab (sr) when opening modal
+    const form = modal.querySelector('.admin-form');
+    if (form) {
+        // Find first language tab button (sr)
+        const firstLangBtn = form.querySelector('.lang-tab-btn[data-lang="sr"]');
+        if (firstLangBtn) {
+            // Remove active from all buttons
+            form.querySelectorAll('.lang-tab-btn').forEach(b => b.classList.remove('active'));
+            // Add active to first button
+            firstLangBtn.classList.add('active');
+            
+            // Hide all language content
+            form.querySelectorAll('.lang-content').forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+            });
+            
+            // Show first language content (sr)
+            const firstLangContent = form.querySelector('.lang-content[data-lang="sr"]');
+            if (firstLangContent) {
+                firstLangContent.style.display = 'block';
+                firstLangContent.classList.add('active');
+            }
+        }
+    }
 }
 
 function closeModal(modalId) {
