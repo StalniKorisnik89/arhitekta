@@ -920,7 +920,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('repo-info').textContent = `${githubConfig.owner}/${githubConfig.repo} (${DEFAULT_BRANCH})`;
             });
             
-            loadData();
+            loadData().then(() => {
+                // After data is loaded, ensure "about" tab is populated if it's active
+                setTimeout(() => {
+                    const aboutTab = document.getElementById('tab-about');
+                    if (aboutTab && aboutTab.classList.contains('active') && currentData) {
+                        populateForms();
+                    }
+                }, 300);
+            });
         } catch (error) {
             console.error('Error loading saved config:', error);
             localStorage.removeItem('githubConfig');
