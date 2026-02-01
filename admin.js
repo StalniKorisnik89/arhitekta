@@ -390,17 +390,18 @@ async function loadData() {
             currentData = result.content;
             currentSha = result.sha;
             console.log('Data loaded successfully, populating forms...');
-            // Wait a bit to ensure DOM is ready
+            // Wait a bit to ensure DOM is ready, then populate multiple times to ensure it works
             setTimeout(() => {
                 populateForms();
-                // Also ensure "about" tab is populated if it's active
+            }, 150);
+            
+            // Additional populate after longer delay to ensure everything is ready
+            setTimeout(() => {
                 const aboutTab = document.getElementById('tab-about');
                 if (aboutTab && aboutTab.classList.contains('active')) {
-                    setTimeout(() => {
-                        populateForms();
-                    }, 150);
+                    populateForms();
                 }
-            }, 100);
+            }, 400);
             showNotification('Podaci uspešno učitani', 'success');
         } else {
             // File doesn't exist, create it
