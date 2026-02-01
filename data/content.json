@@ -120,11 +120,25 @@
         "status": "Done"
       },
       "gallery": []
+    },
+    {
+      "id": 8,
+      "title": "Novosti",
+      "category": "22",
+      "image": "https://www.novosti.rs/data/images/2023-12-25/437630_arhitektura_f.jpg?ts=1703537693",
+      "description": "test",
+      "specs": {
+        "area": "100",
+        "year": "99",
+        "location": "Bg",
+        "status": "Done"
+      },
+      "gallery": []
     }
   ],
   "contact": {
-    "phone": "+381 11 123 4567",
-    "email": "info@studio.rs",
-    "address": "Beograd, Srbija"
+    "phone": "0641721157",
+    "email": "stalnikorisnik@gmail.com",
+    "address": "32223 Vapa"
   }
 }
