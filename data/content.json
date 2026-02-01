@@ -126,10 +126,22 @@
     },
     {
       "id": 7,
-      "title": "GFaraza",
-      "category": "22",
-      "image": "https://vreme.com/wp-content/uploads/2022/05/IMG-2152.jpg",
-      "description": "Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću. Vila je dizajnirana sa fokusom na prirodno svetlo, otvorene prostore i harmoniju sa okruženjem.\n\nKorišćeni su premium materijali - prirodni kamen, drvo i metal, što daje prostoru luksuzan i trajan karakter. Veliki prozori omogućavaju prirodno osvetljenje tokom dana, dok je večernje osvetljenje pažljivo planirano kako bi stvorilo toplu i ugodnu atmosferu.",
+      "sr": {
+        "title": "GFaraza",
+        "category": "22",
+        "description": "Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću. Vila je dizajnirana sa fokusom na prirodno svetlo, otvorene prostore i harmoniju sa okruženjem.\n\nKorišćeni su premium materijali - prirodni kamen, drvo i metal, što daje prostoru luksuzan i trajan karakter. Veliki prozori omogućavaju prirodno osvetljenje tokom dana, dok je večernje osvetljenje pažljivo planirano kako bi stvorilo toplu i ugodnu atmosferu."
+      },
+      "en": {
+        "title": "GFaraza",
+        "category": "22",
+        "description": "Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću. Vila je dizajnirana sa fokusom na prirodno svetlo, otvorene prostore i harmoniju sa okruženjem.\n\nKorišćeni su premium materijali - prirodni kamen, drvo i metal, što daje prostoru luksuzan i trajan karakter. Veliki prozori omogućavaju prirodno osvetljenje tokom dana, dok je večernje osvetljenje pažljivo planirano kako bi stvorilo toplu i ugodnu atmosferu."
+      },
+      "ru": {
+        "title": "GFaraza",
+        "category": "22",
+        "description": "Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću. Vila je dizajnirana sa fokusom na prirodno svetlo, otvorene prostore i harmoniju sa okruženjem.\n\nKorišćeni su premium materijali - prirodni kamen, drvo i metal, što daje prostoru luksuzan i trajan karakter. Veliki prozori omogućavaju prirodno osvetljenje tokom dana, dok je večernje osvetljenje pažljivo planirano kako bi stvorilo toplu i ugodnu atmosferu."
+      },
+      "image": "https://raw.githubusercontent.com/StalniKorisnik89/arhitekta/main/assets/images/1769960092771-rv8f7e.jpg",
       "specs": {
         "area": "444",
         "year": "2026",
