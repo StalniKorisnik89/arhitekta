@@ -291,9 +291,13 @@
         // Load project data from content.json
         async function loadProjectData() {
             try {
-                const response = await fetch('data/content.json');
+                // Add cache busting to ensure fresh data
+                const cacheBuster = '?v=' + new Date().getTime();
+                const response = await fetch('data/content.json' + cacheBuster);
                 if (!response.ok) throw new Error('Failed to load content');
-                const content = await response.json();
+                const text = await response.text();
+                const content = JSON.parse(text);
+                console.log('Loaded portfolio items:', content.portfolio);
                 return content.portfolio || [];
             } catch (error) {
                 console.error('Error loading project data:', error);
@@ -301,163 +305,88 @@
             }
         }
         
-        // Project data will be loaded dynamically
-        let projects = {};
-            1: {
-                title: "Moderna vila",
-                category: "Rezidencijalna arhitektura",
-                description: `<p>Ovaj projekat predstavlja savremenu rezidencijalnu arhitekturu koja kombinuje funkcionalnost sa estetskom izuzetnošću. Vila je dizajnirana sa fokusom na prirodno svetlo, otvorene prostore i harmoniju sa okruženjem.</p>
-                <p>Korišćeni su premium materijali - prirodni kamen, drvo i metal, što daje prostoru luksuzan i trajan karakter. Veliki prozori omogućavaju prirodno osvetljenje tokom dana, dok je večernje osvetljenje pažljivo planirano kako bi stvorilo toplu i ugodnu atmosferu.</p>`,
-                heroImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                ],
-                specs: {
-                    area: "450 m²",
-                    year: "2023",
-                    location: "Beograd",
-                    status: "Završeno"
-                }
-            },
-            2: {
-                title: "Luksuzni enterijer",
-                category: "Dizajn enterijera",
-                description: `<p>Luksuzni enterijer dizajniran sa pažnjom na svaki detalj. Kombinacija modernih i klasičnih elemenata stvara prostor koji odiše elegancijom i sofisticiranošću.</p>
-                <p>Korišćeni su ekskluzivni materijali i nameštaj, pažljivo odabrani kako bi stvorili harmoniju između funkcionalnosti i estetike.</p>`,
-                heroImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                ],
-                specs: {
-                    area: "280 m²",
-                    year: "2023",
-                    location: "Novi Sad",
-                    status: "Završeno"
-                }
-            },
-            3: {
-                title: "Poslovni prostor",
-                category: "Komercijalna arhitektura",
-                description: `<p>Savremeni poslovni prostor dizajniran za produktivnost i komfor. Otvoreni plan omogućava fleksibilnost i saradnju, dok privatne kancelarije pružaju prostor za fokusiran rad.</p>`,
-                heroImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                ],
-                specs: {
-                    area: "850 m²",
-                    year: "2022",
-                    location: "Beograd",
-                    status: "Završeno"
-                }
-            },
-            4: {
-                title: "Minimalistički stan",
-                category: "Dizajn enterijera",
-                description: `<p>Minimalistički pristup dizajnu koji naglašava čistotu linija i funkcionalnost. Svaki element je pažljivo odabran kako bi doprineo celokupnoj harmoniji prostora.</p>`,
-                heroImage: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                ],
-                specs: {
-                    area: "95 m²",
-                    year: "2023",
-                    location: "Beograd",
-                    status: "Završeno"
-                }
-            },
-            5: {
-                title: "Restoran",
-                category: "Horeka dizajn",
-                description: `<p>Elegantan restoran sa atmosferom koja kombinuje moderni dizajn sa toplinom tradicionalnih elemenata. Prostor je dizajniran kako bi pružio nezaboravno iskustvo gostima.</p>`,
-                heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                ],
-                specs: {
-                    area: "320 m²",
-                    year: "2022",
-                    location: "Beograd",
-                    status: "Završeno"
-                }
-            },
-            6: {
-                title: "Loft prostor",
-                category: "Adaptacija",
-                description: `<p>Industrijski prostor transformisan u moderan i funkcionalan stan. Zadržani su originalni elementi poput opeke i betona, kombinovani sa modernim materijalima.</p>`,
-                heroImage: "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                ],
-                specs: {
-                    area: "180 m²",
-                    year: "2023",
-                    location: "Beograd",
-                    status: "Završeno"
-                }
-            }
-        };
-        
         // Load and populate project data
         async function initProjectPage() {
+            console.log('Initializing project page...');
+            
+            // Get project ID from URL first
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = parseInt(urlParams.get('id'));
+            console.log('Project ID from URL:', projectId);
+            
+            if (!projectId || isNaN(projectId)) {
+                document.body.innerHTML = '<h1>Projekat ID nije validan</h1>';
+                return;
+            }
+            
+            // Load portfolio data
             const portfolioItems = await loadProjectData();
             
-            // Convert array to object with id as key
-            portfolioItems.forEach(item => {
-                projects[item.id] = {
-                    title: item.title,
-                    category: item.category,
-                    description: `<p>${item.description}</p>`,
-                    heroImage: item.image,
-                    gallery: item.gallery || [],
-                    specs: item.specs || {}
-                };
-            });
+            if (!portfolioItems || portfolioItems.length === 0) {
+                document.body.innerHTML = '<h1>Nema dostupnih projekata</h1>';
+                return;
+            }
             
-            // Get project ID from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const projectId = parseInt(urlParams.get('id')) || 1;
-            const project = projects[projectId];
+            // Find project by ID (using find instead of object lookup)
+            const project = portfolioItems.find(item => item.id === projectId);
             
             if (!project) {
+                console.error('Project not found with ID:', projectId);
+                console.log('Available projects:', portfolioItems.map(p => ({ id: p.id, title: p.title })));
                 document.body.innerHTML = '<h1>Projekat nije pronađen</h1>';
                 return;
             }
             
+            console.log('Found project:', project);
+            
             // Populate page
-            document.getElementById('hero-image').src = project.heroImage;
-            document.getElementById('hero-image').alt = project.title;
-            document.getElementById('project-title').textContent = project.title;
-            document.getElementById('project-category').textContent = project.category;
-            document.getElementById('project-description').innerHTML = project.description;
-            document.getElementById('spec-area').textContent = project.specs.area || '';
-            document.getElementById('spec-year').textContent = project.specs.year || '';
-            document.getElementById('spec-location').textContent = project.specs.location || '';
-            document.getElementById('spec-status').textContent = project.specs.status || '';
+            const heroImage = document.getElementById('hero-image');
+            const projectTitle = document.getElementById('project-title');
+            const projectCategory = document.getElementById('project-category');
+            const projectDescription = document.getElementById('project-description');
+            
+            if (heroImage) {
+                heroImage.src = project.image || '';
+                heroImage.alt = project.title;
+            }
+            if (projectTitle) projectTitle.textContent = project.title;
+            if (projectCategory) projectCategory.textContent = project.category;
+            if (projectDescription) {
+                projectDescription.innerHTML = `<p>${project.description || ''}</p>`;
+            }
+            
+            // Update specs
+            if (project.specs) {
+                const specArea = document.getElementById('spec-area');
+                const specYear = document.getElementById('spec-year');
+                const specLocation = document.getElementById('spec-location');
+                const specStatus = document.getElementById('spec-status');
+                
+                if (specArea) specArea.textContent = project.specs.area || '';
+                if (specYear) specYear.textContent = project.specs.year || '';
+                if (specLocation) specLocation.textContent = project.specs.location || '';
+                if (specStatus) specStatus.textContent = project.specs.status || '';
+            }
             
             // Populate gallery
             const gallery = document.getElementById('project-gallery');
-            if (project.gallery && project.gallery.length > 0) {
-                project.gallery.forEach(imgSrc => {
+            if (gallery) {
+                gallery.innerHTML = ''; // Clear existing content
+                
+                if (project.gallery && project.gallery.length > 0) {
+                    project.gallery.forEach(imgSrc => {
+                        const item = document.createElement('div');
+                        item.className = 'gallery-item';
+                        item.innerHTML = `<img src="${imgSrc}" alt="${project.title}" loading="lazy">`;
+                        gallery.appendChild(item);
+                    });
+                } else {
+                    // If no gallery, show main image
                     const item = document.createElement('div');
                     item.className = 'gallery-item';
-                    item.innerHTML = `<img src="${imgSrc}" alt="${project.title}" loading="lazy">`;
+                    item.innerHTML = `<img src="${project.image || ''}" alt="${project.title}" loading="lazy">`;
                     gallery.appendChild(item);
-                });
-            } else {
-                // If no gallery, show main image
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.innerHTML = `<img src="${project.heroImage}" alt="${project.title}" loading="lazy">`;
-                gallery.appendChild(item);
+                }
             }
             
             // Update page title
