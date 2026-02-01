@@ -389,7 +389,11 @@ async function loadData() {
         if (result && result.content) {
             currentData = result.content;
             currentSha = result.sha;
-            populateForms();
+            console.log('Data loaded successfully, populating forms...');
+            // Wait a bit to ensure DOM is ready
+            setTimeout(() => {
+                populateForms();
+            }, 100);
             showNotification('Podaci uspešno učitani', 'success');
         } else {
             // File doesn't exist, create it
@@ -401,12 +405,16 @@ async function loadData() {
                 if (newResult) {
                     currentSha = newResult.sha;
                 }
-                populateForms();
+                setTimeout(() => {
+                    populateForms();
+                }, 100);
                 showNotification('Kreiran novi fajl sa podacima', 'success');
             } catch (createError) {
                 console.error('Error creating file:', createError);
                 // Still populate with initial data so user can work
-                populateForms();
+                setTimeout(() => {
+                    populateForms();
+                }, 100);
                 showNotification('Kreiran lokalni fajl. Pokušajte ponovo da sačuvate.', 'error');
             }
         }
@@ -415,7 +423,9 @@ async function loadData() {
         showNotification('Greška pri učitavanju podataka: ' + error.message, 'error');
         // Try to use initial data as fallback
         currentData = getInitialData();
-        populateForms();
+        setTimeout(() => {
+            populateForms();
+        }, 100);
     } finally {
         showLoading(false);
     }
