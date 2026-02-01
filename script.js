@@ -246,6 +246,17 @@ if (document.readyState === 'loading') {
 // ===== Contact Form Handling =====
 let contactEmail = 'info@studio.rs'; // Default email, will be updated from data/content.json
 
+// Initialize EmailJS (you'll need to get your public key from EmailJS dashboard)
+// For now, we'll use a placeholder - you need to replace this with your actual EmailJS public key
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
+
+// Initialize EmailJS when available
+if (typeof emailjs !== 'undefined') {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+}
+
 function updateContactLinks() {
     // Get contact info from page
     const phoneElement = document.getElementById('contact-phone-link');
@@ -275,7 +286,7 @@ if (document.readyState === 'loading') {
 const contactForm = document.getElementById('contact-form');
 
 if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         // Get form data
@@ -292,51 +303,91 @@ if (contactForm) {
             return;
         }
         
-        // Create mailto link with subject and body
-        const subject = encodeURIComponent(`Kontakt forma: ${data.name}`);
-        const body = encodeURIComponent(
-            `Ime: ${data.name}\n` +
-            `Email: ${data.email}\n` +
-            (data.phone ? `Telefon: ${data.phone}\n` : '') +
-            `\nPoruka:\n${data.message}`
-        );
-        
-        const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
-        
         // Show loading state
         const submitBtn = document.getElementById('submit-btn');
         const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = getNestedValue(translations, 'contact.form.sending') || 'Šalje se...';
         
-        // Open email client
-        try {
-            window.location.href = mailtoLink;
-            
-            // Show success message
-            showFormMessage(
-                getNestedValue(translations, 'contact.form.success') || 'Poruka je pripremljena! Proverite vaš email klijent.',
-                'success'
-            );
-            
-            // Reset form
-            contactForm.reset();
-            
-            // Reset button after 3 seconds
-            setTimeout(() => {
+        // Try to send email using EmailJS if configured, otherwise fallback to mailto
+        if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+            try {
+                // Send email using EmailJS
+                await emailjs.send(
+                    EMAILJS_SERVICE_ID,
+                    EMAILJS_TEMPLATE_ID,
+                    {
+                        to_email: recipientEmail,
+                        from_name: data.name,
+                        from_email: data.email,
+                        phone: data.phone || 'Nije naveden',
+                        message: data.message,
+                        subject: `Kontakt forma: ${data.name}`
+                    }
+                );
+                
+                // Show success message
+                showFormMessage(
+                    getNestedValue(translations, 'contact.form.success') || 'Hvala vam! Vaša poruka je uspešno poslata.',
+                    'success'
+                );
+                
+                // Reset form
+                contactForm.reset();
+                
+                // Reset button
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
-            }, 3000);
-        } catch (error) {
-            console.error('Error opening email client:', error);
-            showFormMessage(
-                getNestedValue(translations, 'contact.form.error') || 'Greška pri slanju poruke. Molimo pokušajte ponovo.',
-                'error'
-            );
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
+            } catch (error) {
+                console.error('EmailJS Error:', error);
+                // Fallback to mailto if EmailJS fails
+                sendViaMailto(data, recipientEmail, submitBtn, originalText);
+            }
+        } else {
+            // Fallback to mailto if EmailJS is not configured
+            sendViaMailto(data, recipientEmail, submitBtn, originalText);
         }
     });
+}
+
+function sendViaMailto(data, recipientEmail, submitBtn, originalText) {
+    // Create mailto link with subject and body
+    const subject = encodeURIComponent(`Kontakt forma: ${data.name}`);
+    const body = encodeURIComponent(
+        `Ime: ${data.name}\n` +
+        `Email: ${data.email}\n` +
+        (data.phone ? `Telefon: ${data.phone}\n` : '') +
+        `\nPoruka:\n${data.message}`
+    );
+    
+    const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+    
+    try {
+        window.location.href = mailtoLink;
+        
+        // Show success message
+        showFormMessage(
+            getNestedValue(translations, 'contact.form.success') || 'Hvala vam! Email klijent je otvoren.',
+            'success'
+        );
+        
+        // Reset form
+        document.getElementById('contact-form').reset();
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, 3000);
+    } catch (error) {
+        console.error('Error opening email client:', error);
+        showFormMessage(
+            getNestedValue(translations, 'contact.form.error') || 'Greška pri slanju poruke. Molimo pokušajte ponovo.',
+            'error'
+        );
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
 }
 
 function showFormMessage(message, type = 'success') {

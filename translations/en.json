@@ -79,7 +79,7 @@
       "message": "Message",
       "send": "Send",
       "sending": "Sending...",
-      "success": "Message is ready! Please check your email client.",
+      "success": "Thank you! Your message has been sent successfully.",
       "error": "Error sending message. Please try again."
     },
     "info": {

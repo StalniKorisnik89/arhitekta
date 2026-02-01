@@ -79,7 +79,7 @@
       "message": "Poruka",
       "send": "Pošalji",
       "sending": "Šalje se...",
-      "success": "Poruka je pripremljena! Proverite vaš email klijent.",
+      "success": "Hvala vam! Vaša poruka je uspešno poslata.",
       "error": "Greška pri slanju poruke. Molimo pokušajte ponovo."
     },
     "info": {
