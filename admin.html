@@ -150,8 +150,19 @@
                     
                     <div class="form-group">
                         <label for="hero-background-image">URL pozadinske slike</label>
-                        <input type="url" id="hero-background-image" name="background-image">
-                        <small>URL slike za pozadinu Hero sekcije (opciono)</small>
+                        <div class="image-upload-wrapper">
+                            <input type="url" id="hero-background-image" name="background-image">
+                            <div class="image-upload-controls">
+                                <label for="hero-background-image-upload" class="btn btn-small btn-secondary">Upload slike</label>
+                                <input type="file" id="hero-background-image-upload" accept="image/*" style="display: none;">
+                                <span id="hero-background-image-upload-status" class="upload-status"></span>
+                            </div>
+                            <div id="hero-background-image-preview" class="image-preview" style="display: none;">
+                                <img id="hero-background-image-preview-img" src="" alt="Preview">
+                                <button type="button" class="btn-remove-preview" onclick="removeImagePreview('hero-background')">&times;</button>
+                            </div>
+                        </div>
+                        <small>URL slike za pozadinu Hero sekcije (opciono). Preporučena dimenzija: 1920x1080px ili veća (16:9 format). Maksimalna veličina: 5MB.</small>
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Sačuvaj izmene</button>
