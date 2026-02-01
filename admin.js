@@ -1183,15 +1183,30 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         
+        const tokenValue = formData.get('token').trim();
+        const ownerValue = formData.get('owner').trim();
+        const repoValue = formData.get('repo').trim();
+
+        // Validate token format
+        if (!tokenValue.startsWith('ghp_') && !tokenValue.startsWith('github_pat_')) {
+            showError('Token mora počinjati sa "ghp_" ili "github_pat_".\n\nProverite da li ste pravilno kopirali token sa GitHub stranice.');
+            return;
+        }
+
         githubConfig = {
-            token: formData.get('token'),
-            owner: formData.get('owner'),
-            repo: formData.get('repo')
+            token: tokenValue,
+            owner: ownerValue,
+            repo: repoValue
         };
 
         // Test connection
         showLoading(true);
         try {
+            // First verify token by checking user info
+            const userInfo = await githubRequest('/user');
+            console.log('Token verified for user:', userInfo.login);
+            
+            // Then test repo access
             await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
             
             // Detect default branch
@@ -1207,7 +1222,34 @@ document.addEventListener('DOMContentLoaded', () => {
             
             loadData();
         } catch (error) {
-            showError('Greška pri povezivanju: ' + error.message);
+            console.error('Login error:', error);
+            let errorMessage = error.message || 'Greška pri povezivanju';
+            
+            // Provide more specific guidance
+            if (errorMessage.includes('401') || errorMessage.includes('Neautorizovan')) {
+                errorMessage = 'Neautorizovan pristup. Proverite:\n\n' +
+                    '1. ✅ Da li je token ispravno kopiran (bez razmaka na početku/kraju)\n' +
+                    '2. ✅ Da li token ima "repo" dozvolu (proverite na GitHub Settings > Tokens)\n' +
+                    '3. ✅ Da li je token istekao (proverite datum isteka na GitHub)\n' +
+                    '4. ✅ Da li je token obrisan\n\n' +
+                    'Ako ste kreirali token malopre, proverite da li ste:\n' +
+                    '• Označili "repo" dozvolu pri kreiranju\n' +
+                    '• Kopirali ceo token (počinje sa ghp_ ili github_pat_)\n' +
+                    '• Niste dodali razmake prilikom kopiranja\n\n' +
+                    'Kreirajte novi token: https://github.com/settings/tokens';
+            } else if (errorMessage.includes('404')) {
+                errorMessage = 'Repozitorijum nije pronađen.\n\n' +
+                    'Proverite da li su:\n' +
+                    '• Repo Owner: ispravan GitHub username\n' +
+                    '• Repo Name: ispravan naziv repozitorijuma\n' +
+                    '• Repozitorijum postoji i imate pristup';
+            } else if (errorMessage.includes('403')) {
+                errorMessage = 'Zabranjen pristup.\n\n' +
+                    'Token nema dovoljno dozvola. Proverite da li token ima "repo" dozvolu.\n' +
+                    'Kreirajte novi token sa "repo" dozvolom: https://github.com/settings/tokens';
+            }
+            
+            showError(errorMessage);
         } finally {
             showLoading(false);
         }
