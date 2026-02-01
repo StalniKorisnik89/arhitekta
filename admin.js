@@ -715,7 +715,19 @@ function editService(id) {
     
     document.getElementById('service-modal-title').textContent = 'Izmeni uslugu';
     
+    // Open modal first, then ensure tabs are reset
     openModal('service-modal');
+    
+    // Small delay to ensure DOM is ready, then ensure first tab is visible
+    setTimeout(() => {
+        const form = document.getElementById('service-modal').querySelector('.admin-form');
+        if (form) {
+            const firstLangContent = form.querySelector('.lang-content[data-lang="sr"]');
+            if (firstLangContent) {
+                firstLangContent.style.display = 'block';
+            }
+        }
+    }, 50);
 }
 
 function deleteService(id) {
@@ -731,7 +743,20 @@ function addService() {
     document.getElementById('service-form').reset();
     document.getElementById('service-id').value = '';
     document.getElementById('service-modal-title').textContent = 'Dodaj uslugu';
+    
+    // Open modal first, then ensure tabs are reset
     openModal('service-modal');
+    
+    // Small delay to ensure DOM is ready, then ensure first tab is visible
+    setTimeout(() => {
+        const form = document.getElementById('service-modal').querySelector('.admin-form');
+        if (form) {
+            const firstLangContent = form.querySelector('.lang-content[data-lang="sr"]');
+            if (firstLangContent) {
+                firstLangContent.style.display = 'block';
+            }
+        }
+    }, 50);
 }
 
 // ===== Portfolio Management =====
@@ -803,7 +828,19 @@ function editPortfolio(id) {
     document.getElementById('portfolio-status').value = project.specs?.status || '';
     document.getElementById('portfolio-modal-title').textContent = 'Izmeni projekat';
     
+    // Open modal first, then ensure tabs are reset
     openModal('portfolio-modal');
+    
+    // Small delay to ensure DOM is ready, then ensure first tab is visible
+    setTimeout(() => {
+        const form = document.getElementById('portfolio-modal').querySelector('.admin-form');
+        if (form) {
+            const firstLangContent = form.querySelector('.lang-content[data-lang="sr"]');
+            if (firstLangContent) {
+                firstLangContent.style.display = 'block';
+            }
+        }
+    }, 50);
 }
 
 function deletePortfolio(id) {
