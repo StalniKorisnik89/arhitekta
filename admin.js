@@ -63,8 +63,9 @@ function showError(message) {
 async function githubRequest(endpoint, options = {}) {
     const url = `${GITHUB_API_BASE}${endpoint}`;
     const headers = {
-        'Authorization': `token ${githubConfig.token}`,
-        'Accept': 'application/vnd.github.v3+json',
+        'Authorization': `Bearer ${githubConfig.token}`,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
         'Content-Type': 'application/json',
         ...options.headers
     };
@@ -86,11 +87,12 @@ async function githubRequest(endpoint, options = {}) {
                     errorMessage = 'Fajl nije pronađen. Proverite putanju i da li fajl postoji u repozitorijumu.';
                 } else if (response.status === 401) {
                     errorMessage = 'Neautorizovan pristup. Proverite:\n' +
-                        '1. Da li je token ispravno kopiran (bez razmaka)\n' +
-                        '2. Da li token ima "repo" dozvolu\n' +
+                        '1. Da li je token ispravno kopiran (bez razmaka na početku/kraju)\n' +
+                        '2. Classic token: mora imati "repo" dozvolu. Fine-grained: mora imati "Contents" i "Metadata" za repozitorijum\n' +
                         '3. Da li je token istekao (proverite na GitHub Settings)\n' +
-                        '4. Da li je token obrisan\n' +
-                        '5. Pokušajte da kreirate novi token';
+                        '4. Da li je token obrisan ili je bio izložen (GitHub ga automatski poništava)\n' +
+                        '5. Ako koristite organizaciju sa SAML SSO: token mora biti autorizovan za SSO\n' +
+                        '6. Pokušajte da kreirate novi token';
                 } else if (response.status === 403) {
                     errorMessage = 'Zabranjen pristup. Proverite dozvole tokena (potrebna "repo" dozvola).';
                 } else if (response.status === 409) {
@@ -1302,14 +1304,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Provide more specific guidance
             if (errorMessage.includes('401') || errorMessage.includes('Neautorizovan')) {
                 errorMessage = 'Neautorizovan pristup. Proverite:\n\n' +
-                    '1. ✅ Da li je token ispravno kopiran (bez razmaka na početku/kraju)\n' +
-                    '2. ✅ Da li token ima "repo" dozvolu (proverite na GitHub Settings > Tokens)\n' +
-                    '3. ✅ Da li je token istekao (proverite datum isteka na GitHub)\n' +
-                    '4. ✅ Da li je token obrisan\n\n' +
-                    'Ako ste kreirali token malopre, proverite da li ste:\n' +
-                    '• Označili "repo" dozvolu pri kreiranju\n' +
-                    '• Kopirali ceo token (počinje sa ghp_ ili github_pat_)\n' +
-                    '• Niste dodali razmake prilikom kopiranja\n\n' +
+                    '1. Token: kopirajte ceo (ghp_ ili github_pat_), bez razmaka na početku/kraju\n' +
+                    '2. Classic token: označite "repo" dozvolu. Fine-grained: dajte "Contents" i "Metadata" za repozitorijum\n' +
+                    '3. Da li je token istekao ili obrisan (GitHub Settings)\n' +
+                    '4. Organizacija sa SAML? Autorizujte token za SSO\n\n' +
                     'Kreirajte novi token: https://github.com/settings/tokens';
             } else if (errorMessage.includes('404')) {
                 errorMessage = 'Repozitorijum nije pronađen.\n\n' +
