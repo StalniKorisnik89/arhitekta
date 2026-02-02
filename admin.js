@@ -2,7 +2,8 @@
 let githubConfig = {
     token: null,
     owner: null,
-    repo: null
+    repo: null,
+    useTokenAuth: false  // true = "token", false = "Bearer"
 };
 
 const GITHUB_API_BASE = 'https://api.github.com';
@@ -16,11 +17,11 @@ let currentUsersSha = null;
 async function detectDefaultBranch() {
     try {
         // First verify token by checking user info
-        const userInfo = await githubRequest('/user');
+        const userInfo = await githubRequestWithFallback('/user');
         console.log('Token verified for user:', userInfo.login);
         
         // Then get repo info
-        const repoInfo = await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
+        const repoInfo = await githubRequestWithFallback(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
         if (repoInfo && repoInfo.default_branch) {
             DEFAULT_BRANCH = repoInfo.default_branch;
             console.log('Detected default branch:', DEFAULT_BRANCH);
@@ -60,10 +61,12 @@ function showError(message) {
 }
 
 // ===== GitHub API Functions =====
-async function githubRequest(endpoint, options = {}) {
+async function githubRequest(endpoint, options = {}, useTokenAuth = null) {
     const url = `${GITHUB_API_BASE}${endpoint}`;
+    const useToken = useTokenAuth !== null ? useTokenAuth : githubConfig.useTokenAuth;
+    const authHeader = useToken ? `token ${githubConfig.token}` : `Bearer ${githubConfig.token}`;
     const headers = {
-        'Authorization': `Bearer ${githubConfig.token}`,
+        'Authorization': authHeader,
         'Accept': 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
         'Content-Type': 'application/json',
@@ -78,28 +81,28 @@ async function githubRequest(endpoint, options = {}) {
 
         if (!response.ok) {
             let errorMessage = `HTTP error! status: ${response.status}`;
+            let errorData = {};
             try {
-                const errorData = await response.json();
+                errorData = await response.json();
                 errorMessage = errorData.message || errorMessage;
                 
                 // More specific error messages
                 if (response.status === 404) {
                     errorMessage = 'Fajl nije pronađen. Proverite putanju i da li fajl postoji u repozitorijumu.';
                 } else if (response.status === 401) {
-                    errorMessage = 'Neautorizovan pristup. Proverite:\n' +
-                        '1. Da li je token ispravno kopiran (bez razmaka na početku/kraju)\n' +
-                        '2. Classic token: mora imati "repo" dozvolu. Fine-grained: mora imati "Contents" i "Metadata" za repozitorijum\n' +
-                        '3. Da li je token istekao (proverite na GitHub Settings)\n' +
-                        '4. Da li je token obrisan ili je bio izložen (GitHub ga automatski poništava)\n' +
-                        '5. Ako koristite organizaciju sa SAML SSO: token mora biti autorizovan za SSO\n' +
-                        '6. Pokušajte da kreirate novi token';
+                    const ghMsg = errorData.message ? '\n\nGitHub kaže: "' + errorData.message + '"' : '';
+                    errorMessage = 'Neautorizovan pristup.' + ghMsg + '\n\nProverite:\n' +
+                        '1. Token kopiran ceo, bez razmaka (ghp_ ili github_pat_)\n' +
+                        '2. Classic: označite "repo". Fine-grained: Contents + Metadata za repozitorijum\n' +
+                        '3. Token nije istekao (GitHub Settings)\n' +
+                        '4. Ako organizacija koristi SAML SSO: autorizujte token\n' +
+                        '5. Kreirajte novi token: https://github.com/settings/tokens';
                 } else if (response.status === 403) {
                     errorMessage = 'Zabranjen pristup. Proverite dozvole tokena (potrebna "repo" dozvola).';
                 } else if (response.status === 409) {
                     errorMessage = errorData.message || '409 Conflict - Fajl je promenjen. Pokušavam ponovo sa najnovijim SHA.';
                 }
             } catch (e) {
-                // If error response is not JSON, use status text
                 errorMessage = response.statusText || errorMessage;
             }
             throw new Error(errorMessage);
@@ -109,6 +112,25 @@ async function githubRequest(endpoint, options = {}) {
     } catch (error) {
         console.error('GitHub API Error:', error);
         throw error;
+    }
+}
+
+// Wrapper koji pokušava Bearer, pa token auth kao fallback
+async function githubRequestWithFallback(endpoint, options = {}) {
+    try {
+        return await githubRequest(endpoint, options, false);
+    } catch (err) {
+        if (err.message && err.message.includes('Neautorizovan') && !options._triedToken) {
+            console.log('Pokušavam token auth umesto Bearer...');
+            try {
+                const result = await githubRequest(endpoint, { ...options, _triedToken: true }, true);
+                githubConfig.useTokenAuth = true;  // Za buduće zahteve
+                return result;
+            } catch (e) {
+                throw err;
+            }
+        }
+        throw err;
     }
 }
 
@@ -1279,11 +1301,11 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoading(true);
         try {
             // First verify token by checking user info
-            const userInfo = await githubRequest('/user');
+            const userInfo = await githubRequestWithFallback('/user');
             console.log('Token verified for user:', userInfo.login);
             
             // Then test repo access
-            await githubRequest(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
+            await githubRequestWithFallback(`/repos/${githubConfig.owner}/${githubConfig.repo}`);
             
             // Detect default branch
             await detectDefaultBranch();
